@@ -1,0 +1,82 @@
+---
+// Bloco editorial "O que esperar depois do preenchimento labial", a partir do carrossel da própria Dra.
+// Texto à esquerda, foto entrando pela direita; embaixo, as fases em cards brancos com o desenho de traço
+// dos lábios (como nas artes dela), cada vez menos inchados.
+// A fase "Dias 1 e 2" não está nas artes recebidas (falta o slide 1); o texto é o que as outras fases deixam
+// implícito. Confirmar com a Dra.
+import { Picture } from "astro:assets";
+import Icon from "./Icon.astro";
+import foto from "../assets/img/labial-aplicacao.jpg";
+import { whatsappProcedimento } from "../config/site";
+
+// Altura do lábio de cima e de baixo (px no viewBox 240x150), do mais inchado ao resultado final.
+const FASES = [
+  { quando: "Dias 1 e 2", titulo: "Inchaço no auge.", texto: "Lábios mais inchados e, às vezes, pequenos roxos. Faz parte.", cima: 54, baixo: 68 },
+  { quando: "Dias 3 a 7", titulo: "Desinchando.", texto: "O inchaço já diminui bastante.", cima: 44, baixo: 57 },
+  { quando: "Dias 9 e 10", titulo: "A fase do amor.", texto: "Você se apaixona pelos novos lábios. Tem gente que até sente falta de mais inchaço.", cima: 36, baixo: 48 },
+  { quando: "A partir de 14 dias", titulo: "O resultado real.", texto: "Inchaço e roxos já passaram. Agora dá para avaliar o efeito do preenchimento.", cima: 31, baixo: 42 },
+];
+
+const Y = 76;
+const labios = (a: number, b: number) => ({
+  cima: `M14 ${Y} C 50 ${Y - 6} 72 ${Y - a} 100 ${Y - a} C 109 ${Y - a} 115 ${Y - a + 6} 120 ${Y - a + 10} C 125 ${Y - a + 6} 131 ${Y - a} 140 ${Y - a} C 168 ${Y - a} 190 ${Y - 6} 226 ${Y}`,
+  baixo: `M14 ${Y} C 52 ${Y + b * 0.3} 78 ${Y + b} 120 ${Y + b} C 162 ${Y + b} 188 ${Y + b * 0.3} 226 ${Y}`,
+  boca: `M20 ${Y} C 64 ${Y + 4} 96 ${Y - 3} 120 ${Y + 1} C 144 ${Y - 3} 176 ${Y + 4} 220 ${Y}`,
+});
+---
+
+<section id="labial" class="band bg-mist" aria-labelledby="labial-titulo">
+  <div class="wrap grid items-center gap-10 md:grid-cols-[1.15fr_1fr] md:gap-16">
+    <div>
+      <p class="t-kicker" data-reveal>Preenchimento labial</p>
+      <h2 id="labial-titulo" class="t-section mt-3" data-reveal>O que esperar depois.</h2>
+      <p class="mt-5 max-w-[30rem] md:mt-6" data-reveal>
+        O resultado aparece em etapas. Saber o que é normal em cada fase deixa a recuperação bem mais
+        tranquila.
+      </p>
+      <a
+        href={whatsappProcedimento("preenchimento labial")}
+        target="_blank"
+        rel="noopener"
+        class="link mt-5 text-[17px]"
+        data-reveal
+      >
+        Quero agendar meu labial <Icon name="caretRight" class="chev" />
+      </a>
+    </div>
+    <div class="frame mx-auto w-full max-w-[22rem] md:ml-auto md:mr-0" data-reveal>
+      <Picture
+        src={foto}
+        formats={["avif", "webp"]}
+        widths={[380]}
+        sizes="22rem"
+        alt="Dra. Rychelly de jaleco branco e luvas, aplicando o preenchimento nos lábios com uma seringa"
+        loading="lazy"
+        decoding="async"
+        class="block aspect-[2/3] w-full object-cover"
+      />
+    </div>
+  </div>
+
+  <ol class="wrap-wide mt-14 grid gap-4 sm:grid-cols-2 md:mt-20 lg:grid-cols-4" aria-label="Fases da recuperação">
+    {
+      FASES.map((f, i) => {
+        const p = labios(f.cima, f.baixo);
+        return (
+          <li class="card flex flex-col bg-white px-7 pb-8 pt-9" data-reveal style={`--d: ${i}`}>
+            <svg viewBox="0 0 240 150" class="mx-auto h-auto w-[78%] max-w-[13rem] text-ink" aria-hidden="true">
+              <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d={p.cima} />
+                <path d={p.baixo} />
+                <path d={p.boca} />
+              </g>
+            </svg>
+            <p class="t-small mt-8 font-semibold text-slate">{f.quando}</p>
+            <h3 class="t-card mt-1.5">{f.titulo}</h3>
+            <p class="t-small mt-2 text-slate">{f.texto}</p>
+          </li>
+        );
+      })
+    }
+  </ol>
+</section>

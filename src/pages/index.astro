@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import Resultados from "../components/Resultados.astro";
+import Procedimentos from "../components/Procedimentos.astro";
+import Labial from "../components/Labial.astro";
+import Sobre from "../components/Sobre.astro";
+import Contato from "../components/Contato.astro";
+import Rodape from "../components/Rodape.astro";
+import CtaFlutuante from "../components/CtaFlutuante.astro";
+
+const title = "Dra. Rychelly Furtado | Harmonização facial e estética em Pedreiras-MA";
+const description =
+  "Enfermeira harmonizadora em Pedreiras-MA. Botox, preenchimento labial, rinomodelação, bioestimulador, fios de PDO, cuidados com a pele e Golden Bum. Agende sua avaliação pelo WhatsApp.";
+---
+
+<Base title={title} description={description}>
+  <Nav />
+  <main id="conteudo">
+    <Hero />
+    <Resultados />
+    <Procedimentos />
+    <Labial />
+    <Sobre />
+    <Contato />
+  </main>
+  <Rodape />
+  <CtaFlutuante />
+</Base>
+
+<script>
+  import "../scripts/main";
+</script>

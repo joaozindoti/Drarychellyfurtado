@@ -1,0 +1,66 @@
+---
+// Chamada final + onde fica. Título centralizado com a pílula de conversão; embaixo, o mapa e os contatos
+// em cards brancos de 28px sobre a faixa #f5f5f7.
+import Icon from "./Icon.astro";
+import { SITE, ENDERECO_LINHA, WHATSAPP_URL, CTA_LABEL, MAPA_EMBED, MAPA_ROTA } from "../config/site";
+
+const CANAIS = [
+  { icon: "whatsapp", rotulo: "WhatsApp", valor: SITE.telefoneExibicao, href: WHATSAPP_URL, acao: "Enviar mensagem" },
+  { icon: "instagram", rotulo: "Instagram", valor: SITE.instagramUser, href: SITE.instagramUrl, acao: "Ver perfil" },
+  { icon: "mapPin", rotulo: "Endereço", valor: `${ENDERECO_LINHA}, ${SITE.endereco.cep}`, href: MAPA_ROTA, acao: "Como chegar" },
+] as const;
+---
+
+<section id="contato" class="band bg-mist" aria-labelledby="contato-titulo">
+  <div class="wrap text-center">
+    <h2 id="contato-titulo" class="t-section" data-reveal>Agende sua avaliação.</h2>
+    <p class="t-lead mx-auto mt-4 max-w-[32rem] text-slate md:mt-5" data-reveal>
+      Fale direto com a Dra. Rychelly pelo WhatsApp e marque o melhor horário para você.
+    </p>
+    <div class="mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-4" data-reveal>
+      <a href={WHATSAPP_URL} target="_blank" rel="noopener" class="btn" aria-label={`${CTA_LABEL} pelo WhatsApp (abre em nova aba)`}>
+        <Icon name="whatsapp" class="size-5" />
+        {CTA_LABEL}
+      </a>
+      <a href={MAPA_ROTA} target="_blank" rel="noopener" class="link text-[17px]">
+        Como chegar <Icon name="caretRight" class="chev" />
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap mt-12 grid gap-5 md:mt-16 md:grid-cols-[1.35fr_1fr]">
+    <div class="card frame relative min-h-[20rem] bg-white" data-reveal>
+      <iframe
+        src={MAPA_EMBED}
+        title={`Mapa: ${ENDERECO_LINHA}`}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        class="absolute inset-0 h-full w-full rounded-[28px] border-0"></iframe>
+    </div>
+
+    <ul class="card bg-white px-7 py-3 md:px-8" data-reveal style="--d: 1" aria-label="Contatos">
+      {
+        CANAIS.map((c) => (
+          <li class="canal">
+            <a href={c.href} target="_blank" rel="noopener" class="group flex items-start gap-4 py-5">
+              <Icon name={c.icon} class="mt-0.5 size-6 shrink-0 text-ink" />
+              <span class="min-w-0 text-left">
+                <span class="t-small block text-slate">{c.rotulo}</span>
+                <span class="mt-0.5 block text-[17px] font-semibold leading-[1.3]">{c.valor}</span>
+                <span class="link t-small mt-1.5 group-hover:underline">
+                  {c.acao} <Icon name="caretRight" class="chev" />
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .canal + .canal {
+    box-shadow: inset 0 1px 0 var(--color-hairline);
+  }
+</style>

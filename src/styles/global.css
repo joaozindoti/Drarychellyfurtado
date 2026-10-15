@@ -1,0 +1,285 @@
+@import "tailwindcss";
+
+/*
+  SISTEMA VISUAL ("galeria branca" no estilo das páginas de produto da Apple, ver design/ESTILO-APPLE.md)
+
+  Cor
+    white     #ffffff  canvas, hero, seções de história e cards sobre o mist
+    mist      #f5f5f7  faixas alternadas (resultados, preenchimento labial), cards sobre o branco, rodapé
+    frost     #fafafc  menu aberto no celular
+    hairline  #d6d6d6  divisórias de 1px
+    control   #e6e6e8  borda da nav, controles apagados
+    ink       #1d1d1f  títulos, texto, nav
+    slate     #707070  texto secundário, legal
+    steel     #86868b  contorno de controles, indicadores inativos
+    accent    #5b45c9  links de texto (no papel do "Apple Blue"). Violeta da marca da Dra. em vez do azul.
+    accent-cta #6a4fe0 só nas pílulas preenchidas de conversão (no papel do "Pricing Blue"). Branco sobre ele: 5,3:1.
+    signature #b5473a  rótulos pequenos de "assinatura" (no papel do "Launch Orange"). Texto puro, sem pílula.
+    Para voltar ao azul da Apple: accent #0066cc e accent-cta #0071e3.
+  Tipo
+    SF Pro (nos aparelhos Apple, que já têm a fonte) e Inter Variable com eixo óptico (opsz) no resto:
+    em tamanho grande o Inter troca sozinho para o desenho "Display", como o SF Pro Display.
+    Títulos 600 com tracking negativo; corpo 17px, 400, tracking -0.022em (os -0.374px da Apple).
+  Forma
+    card e mídia = 28px | botões e controles = pílula | nav flutuante = 20px
+    sem sombra, sem gradiente decorativo: a separação vem de branco contra #f5f5f7
+  Camadas (z-index)
+    20 nav | 40 botão flutuante | 50 link "pular para o conteúdo"
+*/
+
+@theme static {
+  --color-white: #ffffff;
+  --color-mist: #f5f5f7;
+  --color-frost: #fafafc;
+  --color-hairline: #d6d6d6;
+  --color-control: #e6e6e8;
+  --color-ink: #1d1d1f;
+  --color-slate: #707070;
+  --color-steel: #86868b;
+  --color-accent: #5b45c9;
+  --color-accent-cta: #6a4fe0;
+  --color-accent-cta-hover: #5b41d1;
+  --color-signature: #b5473a;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Variable", "Helvetica Neue", Arial, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter Variable", "Helvetica Neue", Arial, sans-serif;
+
+  --radius-card: 28px;
+  --radius-nav: 20px;
+
+  --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: light;
+  --gutter: clamp(1rem, 0.4rem + 2.6vw, 2.75rem);
+  --max: 980px;
+  --max-wide: 1260px;
+  /* Recuo da coluna de conteúdo até a borda da tela (fileira de cards que vaza para a direita). */
+  --edge: max(var(--gutter), calc((100vw - var(--max)) / 2));
+  --section-gap: clamp(4.5rem, 3rem + 5vw, 8.5rem);
+  --nav-h: 52px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--nav-h) + 0.5rem);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  body {
+    background: var(--color-white);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.022em;
+    font-optical-sizing: auto;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: #e4dcff;
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+  img {
+    max-width: 100%;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: calc(var(--max) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .wrap-wide {
+    width: 100%;
+    max-width: calc(var(--max-wide) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .band {
+    padding-block: var(--section-gap);
+  }
+
+  /* Tipografia (escala da Apple, com clamp para o celular) */
+  .t-hero {
+    font-size: clamp(2.75rem, 1.1rem + 6.2vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .t-section {
+    font-size: clamp(2.25rem, 1.2rem + 3.9vw, 3.5rem);
+    line-height: 1.07;
+    letter-spacing: -0.005em;
+  }
+  .t-feature {
+    font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+  .t-card {
+    font-size: clamp(1.3125rem, 1.1rem + 0.8vw, 1.75rem);
+    line-height: 1.14;
+    letter-spacing: 0.007em;
+  }
+  .t-kicker {
+    font-family: var(--font-display);
+    font-size: clamp(1.0625rem, 0.9rem + 0.6vw, 1.3125rem);
+    font-weight: 600;
+    line-height: 1.19;
+    letter-spacing: 0.011em;
+  }
+  .t-lead {
+    font-family: var(--font-display);
+    font-size: clamp(1.1875rem, 1rem + 0.6vw, 1.5rem);
+    font-weight: 400;
+    line-height: 1.33;
+    letter-spacing: 0.009em;
+  }
+  .t-small {
+    font-size: 14px;
+    line-height: 1.43;
+    letter-spacing: -0.016em;
+  }
+  .t-fine {
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: -0.01em;
+  }
+  .t-signature {
+    color: var(--color-signature);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.33;
+    letter-spacing: -0.01em;
+  }
+
+  /* Pílula preenchida: só para conversão. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.6875rem 1.375rem;
+    border-radius: 9999px;
+    background: var(--color-accent-cta);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.17;
+    letter-spacing: -0.022em;
+    white-space: nowrap;
+    transition: background-color 0.2s var(--ease-apple);
+  }
+  .btn:hover {
+    background: var(--color-accent-cta-hover);
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn-sm {
+    min-height: 28px;
+    padding: 0.25rem 0.875rem;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: -0.01em;
+  }
+  /* Pílula contornada (secundária): sem preenchimento colorido. */
+  .btn-outline {
+    background: transparent;
+    color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-steel);
+  }
+  .btn-outline:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  /* Link de texto com chevron, no estilo "Saiba mais ›". */
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15em;
+    color: var(--color-accent);
+    border-radius: 10px;
+  }
+  .link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+  .link .chev {
+    width: 0.62em;
+    height: 0.62em;
+    flex: none;
+    margin-top: 0.08em;
+  }
+
+  .card {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+  .frame {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .skip-link {
+    position: fixed;
+    left: 1rem;
+    top: -4rem;
+    z-index: 50;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    background: var(--color-ink);
+    color: #fff;
+    font-size: 14px;
+    transition: top 0.2s;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+/* Entrada ao rolar: sobe 24px e aparece, uma vez. Só com JS e sem "reduzir movimento"
+   (sem JS, tudo fica visível desde o início). */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.9s var(--ease-apple),
+      transform 0.9s var(--ease-apple);
+    transition-delay: calc(var(--d, 0) * 90ms);
+  }
+  .js [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+}

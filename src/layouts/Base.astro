@@ -1,0 +1,73 @@
+---
+import "@fontsource-variable/inter/opsz.css";
+import "../styles/global.css";
+import { SITE, ENDERECO_LINHA } from "../config/site";
+import { GRUPOS } from "../data/procedimentos";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL("/og.jpg", Astro.site).href;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HealthAndBeautyBusiness",
+  name: SITE.marca,
+  alternateName: SITE.nome,
+  description,
+  slogan: SITE.lema,
+  url: canonical,
+  image: ogImage,
+  telephone: SITE.telefoneE164,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: SITE.endereco.rua,
+    addressLocality: SITE.endereco.cidade,
+    addressRegion: SITE.endereco.uf,
+    postalCode: SITE.endereco.cep,
+    addressCountry: SITE.endereco.pais,
+  },
+  areaServed: `${SITE.endereco.cidade}-${SITE.endereco.uf}`,
+  sameAs: [SITE.instagramUrl],
+  knowsAbout: GRUPOS.flatMap((g) => g.itens.map((i) => i.nome)),
+  employee: { "@type": "Person", name: SITE.nome, jobTitle: SITE.profissao },
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={SITE.marca} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE.nome}, ${SITE.profissao.toLowerCase()} em ${ENDERECO_LINHA}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <slot />
+  </body>
+</html>

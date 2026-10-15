@@ -1,0 +1,69 @@
+---
+// Quem é a Dra.: bloco editorial branco, foto à esquerda e texto à direita, com uma lista curta no estilo
+// de "ficha técnica" (linhas finas, sem caixas). Só dados confirmados; COREN entra aqui quando vier.
+import { Picture } from "astro:assets";
+import Icon from "./Icon.astro";
+import foto from "../assets/img/sobre-retrato.jpg";
+import { SITE } from "../config/site";
+
+const FICHA = [
+  { rotulo: "Profissão", valor: SITE.profissao },
+  { rotulo: "Atende", valor: "Rosto, pele e corpo" },
+  { rotulo: "Onde", valor: `${SITE.endereco.cidade}, Maranhão` },
+  { rotulo: "Agendamento", valor: "Pelo WhatsApp" },
+];
+---
+
+<section id="sobre" class="band" aria-labelledby="sobre-titulo">
+  <div class="wrap grid items-center gap-10 md:grid-cols-[1fr_1.2fr] md:gap-16">
+    <div class="frame mx-auto w-full max-w-[24rem] bg-[#f2b8b0] md:mx-0" data-reveal>
+      <Picture
+        src={foto}
+        formats={["avif", "webp"]}
+        widths={[460]}
+        sizes="24rem"
+        alt={`${SITE.nome} sorrindo, de blusa branca de renda e cabelo longo escuro`}
+        loading="lazy"
+        decoding="async"
+        class="block aspect-[2/3] w-full object-cover"
+      />
+    </div>
+
+    <div>
+      <p class="t-kicker" data-reveal>Quem cuida de você</p>
+      <h2 id="sobre-titulo" class="t-section mt-3" data-reveal>{SITE.nome}.</h2>
+      <p class="mt-5 md:mt-6" data-reveal>
+        Enfermeira harmonizadora em Pedreiras, no Maranhão, à frente da {SITE.marca}. Cada procedimento começa
+        por uma avaliação: entender o que você quer, o que combina com o seu rosto e o que faz sentido para a sua
+        pele.
+      </p>
+      <p class="mt-4 text-slate" data-reveal>Protegida por Deus.</p>
+
+      <dl class="ficha mt-8 md:mt-10" data-reveal>
+        {
+          FICHA.map((f) => (
+            <div class="flex items-baseline justify-between gap-6 py-3.5">
+              <dt class="t-small text-slate">{f.rotulo}</dt>
+              <dd class="text-right text-[17px] font-semibold">{f.valor}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <a href={SITE.instagramUrl} target="_blank" rel="noopener" class="link mt-6 text-[17px]" data-reveal>
+        Acompanhe no Instagram <Icon name="caretRight" class="chev" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ficha > div {
+    box-shadow: inset 0 1px 0 var(--color-hairline);
+  }
+  .ficha > div:last-child {
+    box-shadow:
+      inset 0 1px 0 var(--color-hairline),
+      inset 0 -1px 0 var(--color-hairline);
+  }
+</style>
