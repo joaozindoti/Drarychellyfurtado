@@ -36,7 +36,7 @@ const DESTAQUES = ["Botox", "Preenchimento labial", "Rinomodelação", "Bioestim
           src={retrato}
           formats={["avif", "webp"]}
           widths={[240, 360, 480, 683]}
-          sizes="(min-width: 1024px) 22rem, 40vw"
+          sizes="(min-width: 1024px) 25.5rem, 46vw"
           alt={`${SITE.nome} sorrindo, de blazer lilás, com as mãos apoiadas sob o queixo, em estúdio de fundo cinza`}
           loading="eager"
           fetchpriority="high"
@@ -58,7 +58,7 @@ const DESTAQUES = ["Botox", "Preenchimento labial", "Rinomodelação", "Bioestim
       <Sticker icon="heart" color="peach" shape="circle" size={3} rotate={-6} class="hero-pop st-c absolute z-[2] max-lg:hidden" style="--i:2" />
     </div>
 
-    <p class="h-texto hero-fade max-w-[33rem] text-[1.04rem] leading-[1.45] md:text-[1.15rem]" style="--i:2">
+    <p class="h-texto hero-fade max-w-[31rem] text-[0.94rem] leading-[1.45] md:text-[1.05rem]" style="--i:2">
       Harmonização facial, labial, pele e corpo com a {SITE.nome}. Para você se olhar no espelho e se reconhecer,
       só que no seu melhor.
     </p>
@@ -79,7 +79,7 @@ const DESTAQUES = ["Botox", "Preenchimento labial", "Rinomodelação", "Bioestim
 <style>
   .hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 40%;
+    grid-template-columns: minmax(0, 1fr) 46%;
     grid-template-areas:
       "tag tag"
       "titulo foto"
@@ -133,7 +133,7 @@ const DESTAQUES = ["Botox", "Preenchimento labial", "Rinomodelação", "Bioestim
 
   @media (min-width: 768px) {
     .hero-grid {
-      grid-template-columns: minmax(0, 1fr) 36%;
+      grid-template-columns: minmax(0, 1fr) 42%;
       column-gap: 2rem;
     }
     .h-tag {
@@ -155,7 +155,7 @@ const DESTAQUES = ["Botox", "Preenchimento labial", "Rinomodelação", "Bioestim
 
   @media (min-width: 1024px) {
     .hero-grid {
-      grid-template-columns: minmax(0, 1fr) clamp(17rem, 24vw, 22rem);
+      grid-template-columns: minmax(0, 1fr) clamp(19rem, 28vw, 25.5rem);
       grid-template-rows: auto auto auto auto 1fr;
       grid-template-areas:
         "tag foto"
