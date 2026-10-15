@@ -1,0 +1,58 @@
+---
+// Faixa corrida (o "marquee banner" do Slush) no índigo da logo, com os procedimentos separados pela
+// borboleta. Decorativa: a lista real está na seção de procedimentos, então a faixa fica fora do leitor de tela.
+// Para com "reduzir movimento" e no hover.
+import Icon from "./Icon.astro";
+import { PROCEDIMENTOS } from "../data/procedimentos";
+
+const nomes = PROCEDIMENTOS.map((p) => p.nome);
+---
+
+<div class="faixa overflow-hidden border-y border-brand bg-brand text-paper" aria-hidden="true">
+  <div class="faixa-track">
+    {
+      [0, 1].map(() => (
+        <ul class="faixa-group">
+          {nomes.map((n) => (
+            <li class="flex items-center gap-6 md:gap-8">
+              <span class="font-display text-[1.6rem] leading-none uppercase md:text-[2.1rem]">{n}</span>
+              <Icon name="butterfly" class="size-5 text-coral md:size-6" />
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .faixa-track {
+    display: flex;
+    width: max-content;
+    animation: faixa 52s linear infinite;
+  }
+  .faixa-group {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem 1rem 0;
+  }
+  @media (min-width: 768px) {
+    .faixa-group {
+      gap: 2rem;
+      padding: 1.15rem 2rem 1.15rem 0;
+    }
+  }
+  .faixa:hover .faixa-track {
+    animation-play-state: paused;
+  }
+  @keyframes faixa {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .faixa-track {
+      animation: none;
+    }
+  }
+</style>

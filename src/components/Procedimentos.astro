@@ -1,87 +1,100 @@
 ---
-// Procedimentos: seção branca com cards #f5f5f7 (28px, sem sombra). Cada linha é um link para o WhatsApp
-// com a mensagem pronta citando o procedimento. Rosto ocupa a largura toda; Pele e Corpo lado a lado.
+// "O que eu faço": fileira de cards Apple (rolagem lateral com setas no desktop, swipe no celular). Cada card
+// tem um tom claro da paleta, ícone-adesivo, a área (rosto, pele, corpo), o nome e uma linha de benefício.
+// O card inteiro é um link para o WhatsApp com a mensagem já citando o procedimento.
 import Icon from "./Icon.astro";
-import { GRUPOS } from "../data/procedimentos";
+import { PROCEDIMENTOS } from "../data/procedimentos";
 import { whatsappProcedimento } from "../config/site";
+
+const cores = ["lilac", "peach", "sage", "champagne", "coral", "brand"];
+const giros = [-6, 5, -4, 6, -5, 4];
 ---
 
-<section id="procedimentos" class="band" aria-labelledby="proc-titulo">
-  <div class="wrap">
-    <h2 id="proc-titulo" class="t-section" data-reveal>Procedimentos.</h2>
-    <p class="t-lead mt-4 max-w-[36rem] text-slate md:mt-5" data-reveal>
-      Do rosto ao corpo. Escolha o que quer cuidar e a conversa já começa pelo procedimento certo.
-    </p>
-
-    <div class="mt-10 grid gap-5 md:mt-14 md:grid-cols-2">
-      {
-        GRUPOS.map((g, gi) => (
-          <article
-            class:list={["card bg-mist p-7 md:p-10", gi === 0 && "md:col-span-2"]}
-            aria-labelledby={`grupo-${g.id}`}
-            data-reveal
-            style={`--d: ${gi}`}
-          >
-            <header class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <h3 id={`grupo-${g.id}`} class="t-feature">
-                {g.titulo}.
-              </h3>
-              <p class="t-kicker text-slate">{g.frase}</p>
-            </header>
-
-            <ul class:list={["proc-list mt-6 md:mt-8", gi === 0 && "md:grid md:grid-cols-2 md:gap-x-12"]}>
-              {g.itens.map((p) => (
-                <li>
-                  <a
-                    href={whatsappProcedimento(p.mensagem)}
-                    target="_blank"
-                    rel="noopener"
-                    class="proc-row group"
-                    aria-label={`${p.nome}: agendar avaliação pelo WhatsApp (abre em nova aba)`}
-                  >
-                    <span class="min-w-0">
-                      <span class="block text-[17px] font-semibold leading-[1.24]">
-                        {p.nome}
-                        {p.assinatura && <span class="t-signature ml-1.5 align-[0.12em]">Assinatura</span>}
-                      </span>
-                      <span class="t-small mt-1 block text-slate">{p.descricao}</span>
-                    </span>
-                    <Icon name="caretRight" class="proc-chev size-3.5 shrink-0" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </article>
-        ))
-      }
+<section id="procedimentos" class="band bg-paper" aria-labelledby="proc-titulo">
+  <div class="wrap flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+    <div>
+      <h2 id="proc-titulo" class="h-section">O que eu faço</h2>
+      <p class="lead mt-4 max-w-[34rem] md:mt-5">
+        Rosto, pele e corpo no mesmo lugar. Toque no procedimento e a conversa no WhatsApp já começa por ele.
+      </p>
+    </div>
+    <div class="hidden gap-2 md:flex">
+      <button type="button" class="rail-btn" aria-label="Procedimentos anteriores" data-rail-prev>
+        <Icon name="arrowLeft" class="size-5" />
+      </button>
+      <button type="button" class="rail-btn" aria-label="Próximos procedimentos" data-rail-next>
+        <Icon name="arrowRight" class="size-5" />
+      </button>
     </div>
   </div>
+
+  <ul class="rail mt-8 py-1 md:mt-10" aria-label="Procedimentos" data-rail tabindex="0">
+    {
+      PROCEDIMENTOS.map((p, i) => {
+        const cor = p.assinatura ? "coral" : cores[i % cores.length];
+        return (
+          <li class="w-[16.5rem] md:w-[18.5rem]">
+            <a
+              href={whatsappProcedimento(p.mensagem)}
+              target="_blank"
+              rel="noopener"
+              class="proc-card card flex h-full flex-col justify-between gap-10 p-5 md:p-6"
+              style={`background:var(--soft-${cor})`}
+              aria-label={`${p.nome}: ${p.linha} Agendar avaliação pelo WhatsApp (abre em nova aba).`}
+            >
+              <span class="flex items-start justify-between gap-3">
+                <span class="chip-icon size-14" style={`--r:${giros[i % giros.length]}deg`}>
+                  <Icon name={p.icon} class="size-7" />
+                </span>
+                {p.assinatura ? (
+                  <span class="tag border-coral bg-coral">Assinatura da Dra.</span>
+                ) : (
+                  <span class="tag">{p.area}</span>
+                )}
+              </span>
+              <span class="block">
+                <span class="proc-nome block font-display uppercase">{p.nome}</span>
+                <span class="mt-3 block text-[0.95rem] leading-snug md:text-base">{p.linha}</span>
+                <span class="proc-link mt-5 inline-flex items-center gap-1.5 text-[0.92rem] font-bold text-brand">
+                  Quero saber mais
+                  <Icon name="arrowUpRight" class="size-4" />
+                </span>
+              </span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
 </section>
 
 <style>
-  .proc-list li {
-    box-shadow: inset 0 1px 0 var(--color-hairline);
+  .proc-card {
+    min-height: 19rem;
+    transition: transform 0.25s var(--ease-out-soft);
   }
-  .proc-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.25rem;
-    padding-block: 1.125rem;
-    border-radius: 10px;
+  @media (min-width: 768px) {
+    .proc-card {
+      min-height: 23rem;
+    }
   }
-  /* O <svg> do ícone entra por set:html, sem o atributo de escopo: daí o :global. */
-  .proc-row :global(.proc-chev) {
-    color: var(--color-steel);
-    transition:
-      transform 0.3s var(--ease-apple),
-      color 0.2s;
+  .proc-nome {
+    font-size: clamp(2rem, 1.7rem + 0.9vw, 2.5rem);
+    line-height: 0.88;
   }
-  .proc-row:hover :global(.proc-chev) {
-    color: var(--color-accent);
-    transform: translateX(3px);
+  @media (hover: hover) and (pointer: fine) {
+    .proc-card:hover {
+      transform: translateY(-4px);
+    }
+    .proc-card:hover :global(.chip-icon) {
+      rotate: 0deg;
+    }
+    .proc-card:hover .proc-link {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
   }
-  .proc-row:hover > span > span:first-child {
-    color: var(--color-accent);
+  .rail:focus-visible {
+    outline-offset: -4px;
   }
 </style>

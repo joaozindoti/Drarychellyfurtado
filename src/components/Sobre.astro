@@ -1,69 +1,136 @@
 ---
-// Quem é a Dra.: bloco editorial branco, foto à esquerda e texto à direita, com uma lista curta no estilo
-// de "ficha técnica" (linhas finas, sem caixas). Só dados confirmados; COREN entra aqui quando vier.
+// Quem é a Dra.: bento de cards Apple. Foto real dela num card, o lema dela em destaque e cards pequenos de
+// tom claro com o que é confirmado. O COREN entra aqui quando vier.
 import { Picture } from "astro:assets";
 import Icon from "./Icon.astro";
+import type { IconName } from "../config/icons";
 import foto from "../assets/img/sobre-retrato.jpg";
 import { SITE } from "../config/site";
 
-const FICHA = [
-  { rotulo: "Profissão", valor: SITE.profissao },
-  { rotulo: "Atende", valor: "Rosto, pele e corpo" },
-  { rotulo: "Onde", valor: `${SITE.endereco.cidade}, Maranhão` },
-  { rotulo: "Agendamento", valor: "Pelo WhatsApp" },
+const creds: { valor: string; linha: string; icon: IconName; cor: string; cls: string; r: number }[] = [
+  { valor: "Enfermeira", linha: "Harmonizadora, com foco em rosto, pele e corpo.", icon: "sealCheck", cor: "lilac", cls: "c-a", r: -6 },
+  { valor: "Golden Bum", linha: "Minha assinatura em harmonização de bumbum.", icon: "crown", cor: "champagne", cls: "c-b", r: 5 },
+  { valor: "Pedreiras", linha: `Maranhão. ${SITE.endereco.rua}.`, icon: "mapPin", cor: "sage", cls: "c-c", r: -4 },
+  { valor: "Seg a sáb", linha: "Com hora marcada pelo WhatsApp.", icon: "calendarCheck", cor: "peach", cls: "c-d", r: 6 },
 ];
 ---
 
-<section id="sobre" class="band" aria-labelledby="sobre-titulo">
-  <div class="wrap grid items-center gap-10 md:grid-cols-[1fr_1.2fr] md:gap-16">
-    <div class="frame mx-auto w-full max-w-[24rem] bg-[#f2b8b0] md:mx-0" data-reveal>
-      <Picture
-        src={foto}
-        formats={["avif", "webp"]}
-        widths={[460]}
-        sizes="24rem"
-        alt={`${SITE.nome} sorrindo, de blusa branca de renda e cabelo longo escuro`}
-        loading="lazy"
-        decoding="async"
-        class="block aspect-[2/3] w-full object-cover"
-      />
-    </div>
+<section id="sobre" class="band bg-paper" aria-labelledby="sobre-titulo">
+  <div class="wrap">
+    <h2 id="sobre-titulo" class="h-section max-w-[14ch] lg:max-w-none">Prazer, sou a Dra. Rychelly.</h2>
 
-    <div>
-      <p class="t-kicker" data-reveal>Quem cuida de você</p>
-      <h2 id="sobre-titulo" class="t-section mt-3" data-reveal>{SITE.nome}.</h2>
-      <p class="mt-5 md:mt-6" data-reveal>
-        Enfermeira harmonizadora em Pedreiras, no Maranhão, à frente da {SITE.marca}. Cada procedimento começa
-        por uma avaliação: entender o que você quer, o que combina com o seu rosto e o que faz sentido para a sua
-        pele.
-      </p>
-      <p class="mt-4 text-slate" data-reveal>Protegida por Deus.</p>
+    <div class="bento mt-8 grid gap-3.5 md:mt-10 md:gap-4">
+      <div class="b-foto media relative bg-[#f2b8b0]">
+        <Picture
+          src={foto}
+          formats={["avif", "webp"]}
+          widths={[360, 460]}
+          sizes="(min-width: 1024px) 26rem, calc(100vw - 2rem)"
+          alt={`${SITE.nome} sorrindo, de blusa branca de renda e cabelo longo escuro`}
+          loading="lazy"
+          decoding="async"
+          class="absolute inset-0 h-full w-full object-cover object-[50%_20%]"
+        />
+      </div>
 
-      <dl class="ficha mt-8 md:mt-10" data-reveal>
-        {
-          FICHA.map((f) => (
-            <div class="flex items-baseline justify-between gap-6 py-3.5">
-              <dt class="t-small text-slate">{f.rotulo}</dt>
-              <dd class="text-right text-[17px] font-semibold">{f.valor}</dd>
-            </div>
-          ))
-        }
-      </dl>
+      <figure class="b-fala card flex flex-col justify-between gap-8 bg-brand p-6 text-paper md:p-9">
+        <span class="grid size-12 place-items-center rounded-full border border-paper/30 text-coral" aria-hidden="true">
+          <Icon name="butterfly" class="size-6" />
+        </span>
+        <blockquote>
+          <p class="fala display">“{SITE.lema}”</p>
+        </blockquote>
+        <figcaption class="max-w-[40rem] text-paper/80">
+          Sou enfermeira harmonizadora em Pedreiras e cuido de cada paciente da {SITE.marca}. Tudo começa por uma
+          avaliação: entender o que você quer, o que combina com o seu rosto e o que faz sentido para a sua pele.
+          <span class="mt-3 block font-bold text-paper">Protegida por Deus.</span>
+        </figcaption>
+      </figure>
 
-      <a href={SITE.instagramUrl} target="_blank" rel="noopener" class="link mt-6 text-[17px]" data-reveal>
-        Acompanhe no Instagram <Icon name="caretRight" class="chev" />
-      </a>
+      {
+        creds.map((c) => (
+          <div class:list={["cred card flex flex-col justify-between gap-6 p-5 md:p-6", c.cls]} style={`background:var(--soft-${c.cor})`}>
+            <span class="chip-icon" style={`--r:${c.r}deg`}>
+              <Icon name={c.icon} class="size-6" />
+            </span>
+            <p>
+              <span class="cred-valor block font-display uppercase">{c.valor}</span>
+              <span class="mt-2 block text-[0.95rem] font-bold leading-snug md:text-base">{c.linha}</span>
+            </p>
+          </div>
+        ))
+      }
     </div>
   </div>
 </section>
 
 <style>
-  .ficha > div {
-    box-shadow: inset 0 1px 0 var(--color-hairline);
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "foto foto"
+      "fala fala"
+      "a b"
+      "c d";
   }
-  .ficha > div:last-child {
-    box-shadow:
-      inset 0 1px 0 var(--color-hairline),
-      inset 0 -1px 0 var(--color-hairline);
+  .b-foto {
+    grid-area: foto;
+    aspect-ratio: 4 / 5;
+  }
+  .b-fala {
+    grid-area: fala;
+  }
+  .c-a {
+    grid-area: a;
+  }
+  .c-b {
+    grid-area: b;
+  }
+  .c-c {
+    grid-area: c;
+  }
+  .c-d {
+    grid-area: d;
+  }
+  .fala {
+    font-size: clamp(2.3rem, 1.5rem + 3vw, 4.4rem);
+    line-height: 0.9;
+  }
+  .cred-valor {
+    font-size: clamp(1.8rem, 1.35rem + 1.5vw, 2.6rem);
+    line-height: 0.88;
+  }
+  .cred {
+    min-height: 11.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .bento {
+      grid-template-columns: 1.1fr 1fr 1fr;
+      grid-template-areas:
+        "foto fala fala"
+        "foto a b"
+        "foto c d";
+    }
+    .b-foto {
+      aspect-ratio: auto;
+      min-height: 30rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .bento {
+      grid-template-columns: 1.05fr 1fr 1fr 1fr 1fr;
+      grid-template-areas:
+        "foto fala fala fala fala"
+        "foto a b c d";
+    }
+    .cred {
+      min-height: 13rem;
+    }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cred:hover :global(.chip-icon) {
+      rotate: 0deg;
+    }
   }
 </style>

@@ -1,66 +1,86 @@
 ---
-// Chamada final + onde fica. Título centralizado com a pílula de conversão; embaixo, o mapa e os contatos
-// em cards brancos de 28px sobre a faixa #f5f5f7.
+// Contato: mapa num card grande + card de endereço, horário e a chamada. Faixa neutra clara.
+import CtaButton from "./CtaButton.astro";
 import Icon from "./Icon.astro";
-import { SITE, ENDERECO_LINHA, WHATSAPP_URL, CTA_LABEL, MAPA_EMBED, MAPA_ROTA } from "../config/site";
-
-const CANAIS = [
-  { icon: "whatsapp", rotulo: "WhatsApp", valor: SITE.telefoneExibicao, href: WHATSAPP_URL, acao: "Enviar mensagem" },
-  { icon: "instagram", rotulo: "Instagram", valor: SITE.instagramUser, href: SITE.instagramUrl, acao: "Ver perfil" },
-  { icon: "mapPin", rotulo: "Endereço", valor: `${ENDERECO_LINHA}, ${SITE.endereco.cep}`, href: MAPA_ROTA, acao: "Como chegar" },
-] as const;
+import { SITE, MAPA_EMBED, MAPA_ROTA } from "../config/site";
 ---
 
-<section id="contato" class="band bg-mist" aria-labelledby="contato-titulo">
-  <div class="wrap text-center">
-    <h2 id="contato-titulo" class="t-section" data-reveal>Agende sua avaliação.</h2>
-    <p class="t-lead mx-auto mt-4 max-w-[32rem] text-slate md:mt-5" data-reveal>
-      Fale direto com a Dra. Rychelly pelo WhatsApp e marque o melhor horário para você.
-    </p>
-    <div class="mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-4" data-reveal>
-      <a href={WHATSAPP_URL} target="_blank" rel="noopener" class="btn" aria-label={`${CTA_LABEL} pelo WhatsApp (abre em nova aba)`}>
-        <Icon name="whatsapp" class="size-5" />
-        {CTA_LABEL}
-      </a>
-      <a href={MAPA_ROTA} target="_blank" rel="noopener" class="link text-[17px]">
-        Como chegar <Icon name="caretRight" class="chev" />
-      </a>
-    </div>
-  </div>
+<section id="contato" class="band bg-stone" aria-labelledby="contato-titulo">
+  <div class="wrap">
+    <h2 id="contato-titulo" class="h-section max-w-[12ch] md:max-w-none">Vamos marcar sua avaliação?</h2>
 
-  <div class="wrap mt-12 grid gap-5 md:mt-16 md:grid-cols-[1.35fr_1fr]">
-    <div class="card frame relative min-h-[20rem] bg-white" data-reveal>
-      <iframe
-        src={MAPA_EMBED}
-        title={`Mapa: ${ENDERECO_LINHA}`}
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        class="absolute inset-0 h-full w-full rounded-[28px] border-0"></iframe>
-    </div>
+    <div class="mt-8 grid gap-3.5 md:mt-10 md:gap-4 lg:grid-cols-12">
+      <!-- Endereço, horário e a chamada -->
+      <div class="info card flex flex-col gap-7 bg-paper p-6 md:p-8 lg:order-2 lg:col-span-5">
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+          <div>
+            <p class="flex items-center gap-2.5 font-bold">
+              <span class="chip-icon size-10" style="--r:-6deg; background: var(--soft-coral)"><Icon name="mapPin" class="size-5" /></span>
+              Endereço
+            </p>
+            <p class="mt-3">
+              {SITE.endereco.rua}<br />
+              {SITE.endereco.cidade}-{SITE.endereco.uf}<br />
+              CEP {SITE.endereco.cep}
+            </p>
+          </div>
+          <div>
+            <p class="flex items-center gap-2.5 font-bold">
+              <span class="chip-icon size-10" style="--r:6deg; background: var(--soft-lilac)"><Icon name="clock" class="size-5" /></span>
+              Horário
+            </p>
+            <ul class="mt-3">
+              {
+                SITE.horario.map((h) => (
+                  <li>
+                    {h.dias}: <b>{h.horas}</b>
+                  </li>
+                ))
+              }
+              <li class="text-ink-soft">{SITE.horarioComplemento}.</li>
+            </ul>
+          </div>
+        </div>
 
-    <ul class="card bg-white px-7 py-3 md:px-8" data-reveal style="--d: 1" aria-label="Contatos">
-      {
-        CANAIS.map((c) => (
-          <li class="canal">
-            <a href={c.href} target="_blank" rel="noopener" class="group flex items-start gap-4 py-5">
-              <Icon name={c.icon} class="mt-0.5 size-6 shrink-0 text-ink" />
-              <span class="min-w-0 text-left">
-                <span class="t-small block text-slate">{c.rotulo}</span>
-                <span class="mt-0.5 block text-[17px] font-semibold leading-[1.3]">{c.valor}</span>
-                <span class="link t-small mt-1.5 group-hover:underline">
-                  {c.acao} <Icon name="caretRight" class="chev" />
-                </span>
-              </span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+        <p class="flex items-center gap-2.5">
+          <Icon name="whatsapp" class="size-5 text-brand" />
+          <span><b>{SITE.telefoneExibicao}</b> <span class="text-ink-soft">· WhatsApp</span></span>
+        </p>
+
+        <div class="mt-auto flex flex-col gap-2.5 sm:flex-row sm:flex-wrap lg:flex-col xl:flex-row">
+          <CtaButton size="lg" class="w-full sm:w-auto lg:w-full xl:w-auto" />
+          <a href={MAPA_ROTA} target="_blank" rel="noopener" class="btn-line btn-lg">
+            Como chegar
+            <Icon name="arrowUpRight" class="size-5" />
+            <span class="sr-only">(abre o Google Maps em nova aba)</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Mapa -->
+      <div class="map-card media relative bg-paper lg:order-1 lg:col-span-7">
+        <iframe
+          src={MAPA_EMBED}
+          title={`Mapa: ${SITE.marca}, ${SITE.endereco.cidade}-${SITE.endereco.uf}`}
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+          class="absolute inset-0 h-full w-full border-0"></iframe>
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
-  .canal + .canal {
-    box-shadow: inset 0 1px 0 var(--color-hairline);
+  .map-card {
+    aspect-ratio: 4 / 3;
+  }
+  .info {
+    border-radius: var(--radius-media);
+  }
+  @media (min-width: 1024px) {
+    .map-card {
+      aspect-ratio: auto;
+      min-height: 30rem;
+    }
   }
 </style>

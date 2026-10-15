@@ -1,53 +1,39 @@
-// Fileira de cards (scroll-snap nativo). As setas andam um card por vez; os pontos mostram o card mais
-// próximo da borda esquerda. No fim da fileira, a seta "próximo" desliga.
+// Fileira horizontal de cards (Especialidades): setas no desktop, swipe nativo no celular.
+// As setas desligam nas pontas; quem diz se está na ponta é um IntersectionObserver no primeiro e no
+// último card (sem listener de scroll).
 export function initRails(reduce: boolean) {
   document.querySelectorAll<HTMLElement>("[data-rail]").forEach((rail) => {
     const section = rail.closest("section");
-    const items = Array.from(rail.querySelectorAll<HTMLElement>("[data-rail-item]"));
     const prev = section?.querySelector<HTMLButtonElement>("[data-rail-prev]");
     const next = section?.querySelector<HTMLButtonElement>("[data-rail-next]");
-    const dots = Array.from(section?.querySelectorAll<HTMLElement>("[data-rail-dot]") ?? []);
-    if (!items.length) return;
+    const cards = Array.from(rail.children) as HTMLElement[];
+    if (!prev || !next || cards.length < 2) return;
 
-    const padStart = () => parseFloat(getComputedStyle(items[0].parentElement!).paddingLeft) || 0;
-    const atual = () => {
-      const x = rail.scrollLeft;
-      let best = 0;
-      let dist = Infinity;
-      items.forEach((it, i) => {
-        const d = Math.abs(it.offsetLeft - padStart() - x);
-        if (d < dist) {
-          dist = d;
-          best = i;
-        }
-      });
-      return best;
+    const step = () => {
+      const gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+      const w = cards[0].getBoundingClientRect().width + gap;
+      // Anda o número de cards inteiros que cabem na tela (mínimo 1).
+      return Math.max(1, Math.floor((rail.clientWidth - 80) / w)) * w;
     };
-    const fim = () => rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4;
+    const go = (dir: 1 | -1) => rail.scrollBy({ left: dir * step(), behavior: reduce ? "auto" : "smooth" });
+    prev.addEventListener("click", () => go(-1));
+    next.addEventListener("click", () => go(1));
 
-    const update = () => {
-      const i = fim() ? items.length - 1 : atual();
-      dots.forEach((d, k) => d.toggleAttribute("data-active", k === i));
-      if (prev) prev.disabled = rail.scrollLeft <= 4;
-      if (next) next.disabled = fim();
-    };
-    const ir = (i: number) => {
-      const alvo = items[Math.max(0, Math.min(items.length - 1, i))];
-      rail.scrollTo({ left: alvo.offsetLeft - padStart(), behavior: reduce ? "auto" : "smooth" });
-    };
-
-    prev?.addEventListener("click", () => ir(atual() - 1));
-    next?.addEventListener("click", () => ir(atual() + 1));
-    let raf = 0;
-    rail.addEventListener(
-      "scroll",
-      () => {
-        cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(update);
+    if (!("IntersectionObserver" in window)) return;
+    const first = cards[0];
+    const last = cards[cards.length - 1];
+    prev.disabled = true;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          const inteiro = e.intersectionRatio > 0.98;
+          if (e.target === first) prev.disabled = inteiro;
+          else next.disabled = inteiro;
+        });
       },
-      { passive: true }
+      { root: rail, threshold: [0, 0.5, 0.98, 1] }
     );
-    window.addEventListener("resize", update, { passive: true });
-    update();
+    io.observe(first);
+    io.observe(last);
   });
 }

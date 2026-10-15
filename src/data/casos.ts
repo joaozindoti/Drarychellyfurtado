@@ -20,8 +20,10 @@ export interface Caso {
   depois: ImageMetadata;
   altAntes: string;
   altDepois: string;
-  /** object-position da foto no quadro quadrado do card. */
+  /** object-position da foto no comparador (quadrado). */
   foco?: string;
+  /** object-position da miniatura do seletor (3:2). */
+  focoThumb?: string;
   assinatura?: boolean;
 }
 
@@ -66,6 +68,7 @@ export const CASOS: Caso[] = [
     altAntes: "Antes: glúteos vistos de costas, com menos volume na parte de cima",
     altDepois: "Depois: glúteos vistos de costas, com a curva mais arredondada",
     foco: "50% 72%",
+    focoThumb: "50% 42%",
     assinatura: true,
   },
 ];

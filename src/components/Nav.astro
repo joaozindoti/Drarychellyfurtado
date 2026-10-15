@@ -1,133 +1,78 @@
 ---
-// Barra local de produto, no estilo Apple: nome à esquerda, links 12px e a pílula de conversão à direita.
-// Fica presa no topo com fundo translúcido (blur). No celular os links vão para um painel que desce,
-// aberto pelo chevron (como a nav local da Apple). Comportamento em src/scripts/nav.ts.
+// Nav estilo Slush: selo + nome à esquerda, links em pílula contornada, CTA preenchido à direita.
+// Fica por cima da faixa do hero (absoluta), sem fundo próprio.
+import Selo from "./Selo.astro";
+import CtaButton from "./CtaButton.astro";
 import Icon from "./Icon.astro";
-import { WHATSAPP_URL } from "../config/site";
+import { SITE } from "../config/site";
 
-const LINKS = [
-  { href: "#resultados", label: "Resultados" },
+const links = [
   { href: "#procedimentos", label: "Procedimentos" },
-  { href: "#labial", label: "Preenchimento labial" },
+  { href: "#antes-e-depois", label: "Antes e depois" },
+  { href: "#labial", label: "Labial" },
   { href: "#sobre", label: "Sobre" },
   { href: "#contato", label: "Contato" },
 ];
 ---
 
-<header class="nav sticky top-0 z-20" data-nav>
-  <div class="wrap-wide flex h-[var(--nav-h)] items-center justify-between gap-4">
-    <a href="#topo" class="nav-title shrink-0" aria-label="Dra. Rychelly Furtado, início da página">
-      Rychelly Furtado
+<header class="absolute inset-x-0 top-0 z-10">
+  <nav class="wrap flex h-[4.5rem] items-center justify-between gap-6 md:h-20" aria-label="Principal">
+    <a href="#topo" class="flex items-center gap-3 rounded-full pr-2" aria-label={`${SITE.nome}, início`}>
+      <Selo />
+      <span class="flex flex-col leading-[1.1]">
+        <span class="text-[0.98rem] font-bold">{SITE.nome}</span>
+        <span class="text-[0.78rem] text-ink-soft">Saúde e Estética</span>
+      </span>
     </a>
 
-    <nav aria-label="Seções" class="hidden md:block">
-      <ul class="flex items-center gap-6">
-        {
-          LINKS.map((l) => (
-            <li>
-              <a href={l.href} class="nav-link">
-                {l.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-
-    <div class="flex items-center gap-3">
-      <button
-        type="button"
-        class="nav-toggle md:hidden"
-        aria-expanded="false"
-        aria-controls="nav-painel"
-        aria-label="Abrir seções"
-        data-nav-toggle
-      >
-        <svg viewBox="0 0 16 16" class="size-4" aria-hidden="true">
-          <path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-      </button>
-      <a href={WHATSAPP_URL} target="_blank" rel="noopener" class="btn btn-sm" aria-label="Agendar avaliação pelo WhatsApp (abre em nova aba)">
-        Agendar
-      </a>
-    </div>
-  </div>
-
-  <div id="nav-painel" class="nav-panel absolute inset-x-0 top-full md:hidden" data-nav-panel hidden>
-    <ul class="wrap-wide pb-6 pt-2">
+    <ul class="hidden items-center gap-2 xl:flex">
       {
-        LINKS.map((l) => (
+        links.map((l) => (
           <li>
-            <a href={l.href} class="flex items-center justify-between py-3.5 text-[17px]" data-nav-close>
+            <a href={l.href} class="nav-pill">
               {l.label}
-              <Icon name="caretRight" class="size-3 text-steel" />
             </a>
           </li>
         ))
       }
     </ul>
-  </div>
+
+    <div class="hidden lg:block">
+      <CtaButton class="!min-h-12" />
+    </div>
+
+    <a
+      href={SITE.instagramUrl}
+      target="_blank"
+      rel="noopener"
+      class="grid size-12 place-items-center rounded-full border border-line bg-paper lg:hidden"
+      aria-label="Instagram da Dra. Rychelly (abre em nova aba)"
+    >
+      <Icon name="instagram" class="size-[1.35rem]" />
+    </a>
+  </nav>
 </header>
 
 <style>
-  .nav {
-    background: rgba(255, 255, 255, 0.78);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    backdrop-filter: saturate(180%) blur(20px);
-    box-shadow: inset 0 -1px 0 transparent;
-    transition: box-shadow 0.3s var(--ease-apple);
+  .nav-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 1.1rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-paper);
+    font-size: 0.94rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    transition:
+      background-color 0.2s,
+      transform 0.2s var(--ease-out-soft);
   }
-  .nav[data-stuck] {
-    box-shadow: inset 0 -1px 0 var(--color-hairline);
-  }
-  .nav-title {
-    font-family: var(--font-display);
-    font-size: 19px;
-    font-weight: 600;
-    line-height: 1.21;
-    letter-spacing: 0.012em;
-  }
-  @media (max-width: 380px) {
-    .nav-title {
-      font-size: 17px;
+  @media (hover: hover) and (pointer: fine) {
+    .nav-pill:hover {
+      background: var(--soft-lilac);
+      transform: translateY(-2px);
     }
-  }
-  .nav-link {
-    font-size: 12px;
-    line-height: 1;
-    letter-spacing: -0.01em;
-    color: rgba(0, 0, 0, 0.8);
-    transition: color 0.2s;
-  }
-  .nav-link:hover {
-    color: var(--color-accent);
-  }
-  /* Estilos com escopo vencem as utilidades do Tailwind, então o display fica na própria media query. */
-  .nav-toggle {
-    display: none;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    margin-right: -6px;
-    border-radius: 9999px;
-    color: rgba(0, 0, 0, 0.56);
-  }
-  @media (max-width: 767.98px) {
-    .nav-toggle {
-      display: grid;
-    }
-  }
-  .nav-toggle svg {
-    transition: transform 0.3s var(--ease-apple);
-  }
-  .nav-toggle[aria-expanded="true"] svg {
-    transform: rotate(180deg);
-  }
-  .nav-panel {
-    background: var(--color-frost);
-    box-shadow: inset 0 -1px 0 var(--color-control);
-  }
-  .nav-panel li + li {
-    box-shadow: inset 0 1px 0 var(--color-control);
   }
 </style>

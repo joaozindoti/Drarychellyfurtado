@@ -1,285 +1,403 @@
 @import "tailwindcss";
 
 /*
-  SISTEMA VISUAL ("galeria branca" no estilo das páginas de produto da Apple, ver design/ESTILO-APPLE.md)
+  SISTEMA VISUAL v2 (Slush mais sério, nas cores da logo; ver design/ESTILO-SLUSH.md)
+  Mesma lógica da LP da Dra. Carla: faixas de cor chapada, display condensado enorme, cards arredondados com
+  contorno de 1px, adesivos com ícone. Aqui com menos adesivos, giros menores e tons de papel bem leves.
 
   Cor
-    white     #ffffff  canvas, hero, seções de história e cards sobre o mist
-    mist      #f5f5f7  faixas alternadas (resultados, preenchimento labial), cards sobre o branco, rodapé
-    frost     #fafafc  menu aberto no celular
-    hairline  #d6d6d6  divisórias de 1px
-    control   #e6e6e8  borda da nav, controles apagados
-    ink       #1d1d1f  títulos, texto, nav
-    slate     #707070  texto secundário, legal
-    steel     #86868b  contorno de controles, indicadores inativos
-    accent    #5b45c9  links de texto (no papel do "Apple Blue"). Violeta da marca da Dra. em vez do azul.
-    accent-cta #6a4fe0 só nas pílulas preenchidas de conversão (no papel do "Pricing Blue"). Branco sobre ele: 5,3:1.
-    signature #b5473a  rótulos pequenos de "assinatura" (no papel do "Launch Orange"). Texto puro, sem pílula.
-    Para voltar ao azul da Apple: accent #0066cc e accent-cta #0071e3.
+    ink       #23213f  texto, ícones (índigo profundo, mais sóbrio que o preto)
+    brand     #4a4a72  índigo da logo: CTA preenchido, faixa do marquee, selo
+    coral     #ef8a78  coral da borboleta da logo: adesivo e detalhe (nunca fundo de texto pequeno)
+    paper     #ffffff  canvas e cards
+    lilac-wash #efedf8 faixa do hero e de "como funciona" (o "sky wash" do Slush)
+    blush-wash #faf1ee faixa do preenchimento labial
+    stone     #eceaf0  faixa neutra do contato (o "concrete" do Slush, mais claro)
+    adesivos  lilac #cbbff2 | coral #ef8a78 | peach #f6cbb8 | champagne #e6cf9a | sage #bcd8c8 | brand #4a4a72
+              cheios só em adesivos pequenos; texto sempre ink, menos sobre brand (texto branco, 8,3:1)
+    cards     versões bem claras da mesma paleta (--soft-*)
+    line      #cfcae6  contorno de 1px de cards, botões e adesivos (lilás claro, no lugar do preto)
   Tipo
-    SF Pro (nos aparelhos Apple, que já têm a fonte) e Inter Variable com eixo óptico (opsz) no resto:
-    em tamanho grande o Inter troca sozinho para o desenho "Display", como o SF Pro Display.
-    Títulos 600 com tracking negativo; corpo 17px, 400, tracking -0.022em (os -0.374px da Apple).
+    display   Archivo condensada (largura 62), peso 800, instância estática gerada por scripts/fontes.py.
+              Caixa alta, entrelinha 0,84 a 0,9. Só títulos.
+    texto/UI  Instrument Sans 500 e 700. Corpo 16 a 18px, botões e nav 700.
   Forma
-    card e mídia = 28px | botões e controles = pílula | nav flutuante = 20px
-    sem sombra, sem gradiente decorativo: a separação vem de branco contra #f5f5f7
+    interativo (botões, links de nav, tags) = pílula
+    card = 28px | card de mídia grande (foto, comparador, mapa) = 36px | adesivo = 18px ou círculo
+    contorno de 1px em tudo que é objeto; sem sombra, sem gradiente
   Camadas (z-index)
-    20 nav | 40 botão flutuante | 50 link "pular para o conteúdo"
+    10 nav | 40 botão flutuante | 50 link "pular para o conteúdo"
 */
 
-@theme static {
-  --color-white: #ffffff;
-  --color-mist: #f5f5f7;
-  --color-frost: #fafafc;
-  --color-hairline: #d6d6d6;
-  --color-control: #e6e6e8;
-  --color-ink: #1d1d1f;
-  --color-slate: #707070;
-  --color-steel: #86868b;
-  --color-accent: #5b45c9;
-  --color-accent-cta: #6a4fe0;
-  --color-accent-cta-hover: #5b41d1;
-  --color-signature: #b5473a;
+@font-face {
+  font-family: "Archivo Condensada";
+  src: url("../assets/fonts/archivo-condensada-800.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+/* Fallback com métrica próxima, para a troca de fonte não empurrar o layout. */
+@font-face {
+  font-family: "Archivo Fallback";
+  src: local("Arial Narrow Bold"), local("ArialNarrow-Bold"), local("Impact"), local("Arial Bold");
+  size-adjust: 88%;
+  ascent-override: 102%;
+  descent-override: 24%;
+}
 
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Variable", "Helvetica Neue", Arial, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter Variable", "Helvetica Neue", Arial, sans-serif;
+@theme static {
+  --color-ink: #23213f;
+  --color-ink-soft: #57546f;
+  --color-brand: #4a4a72;
+  --color-brand-deep: #3a3a5e;
+  --color-coral: #ef8a78;
+  --color-paper: #ffffff;
+  --color-lilac-wash: #efedf8;
+  --color-blush-wash: #faf1ee;
+  --color-stone: #eceaf0;
+  --color-lilac: #cbbff2;
+  --color-peach: #f6cbb8;
+  --color-champagne: #e6cf9a;
+  --color-sage: #bcd8c8;
+  --color-line: #cfcae6;
+
+  --font-display: "Archivo Condensada", "Archivo Fallback", "Arial Narrow", sans-serif;
+  --font-sans: "Instrument Sans Variable", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
 
   --radius-card: 28px;
-  --radius-nav: 20px;
+  --radius-media: 36px;
+  --radius-sticker: 18px;
 
-  --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 :root {
   color-scheme: light;
-  --gutter: clamp(1rem, 0.4rem + 2.6vw, 2.75rem);
-  --max: 980px;
-  --max-wide: 1260px;
-  /* Recuo da coluna de conteúdo até a borda da tela (fileira de cards que vaza para a direita). */
-  --edge: max(var(--gutter), calc((100vw - var(--max)) / 2));
-  --section-gap: clamp(4.5rem, 3rem + 5vw, 8.5rem);
-  --nav-h: 52px;
+  --gutter: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  --max: 90rem;
+  /* Recuo da coluna de conteúdo até a borda da tela (fileiras que vazam à direita). */
+  --edge: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+
+  /* Fundos de card: versões bem claras da paleta. Os adesivos pequenos usam a cor cheia. */
+  --soft-lilac: #f3f0fd;
+  --soft-coral: #fdf0ed;
+  --soft-peach: #fdf4ee;
+  --soft-champagne: #faf5e8;
+  --soft-sage: #eef6f1;
+  --soft-brand: #ececf4;
+  --soft-paper: #ffffff;
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
-    scroll-padding-top: calc(var(--nav-h) + 0.5rem);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
+    scroll-padding-top: 1rem;
   }
   body {
-    background: var(--color-white);
+    background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 17px;
-    line-height: 1.47;
-    letter-spacing: -0.022em;
-    font-optical-sizing: auto;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
     overflow-x: clip;
   }
+  @media (min-width: 768px) {
+    body {
+      font-size: 1.0625rem;
+    }
+  }
   ::selection {
-    background: #e4dcff;
+    background: var(--color-lilac);
     color: var(--color-ink);
   }
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-brand);
     outline-offset: 3px;
   }
-  img {
+  img,
+  video {
+    display: block;
     max-width: 100%;
   }
   h1,
   h2,
   h3 {
-    font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 700;
     text-wrap: balance;
   }
   p {
     text-wrap: pretty;
+  }
+  b,
+  strong {
+    font-weight: 700;
   }
 }
 
 @layer components {
   .wrap {
     width: 100%;
-    max-width: calc(var(--max) + 2 * var(--gutter));
+    max-width: var(--max);
     margin-inline: auto;
     padding-inline: var(--gutter);
-  }
-  .wrap-wide {
-    width: 100%;
-    max-width: calc(var(--max-wide) + 2 * var(--gutter));
-    margin-inline: auto;
-    padding-inline: var(--gutter);
-  }
-  .band {
-    padding-block: var(--section-gap);
   }
 
-  /* Tipografia (escala da Apple, com clamp para o celular) */
-  .t-hero {
-    font-size: clamp(2.75rem, 1.1rem + 6.2vw, 5rem);
-    line-height: 1.05;
-    letter-spacing: -0.015em;
+  /* Faixas de seção: compactas (48 a 88px), sem divisória nem sombra. */
+  .band {
+    padding-block: clamp(3rem, 2.2rem + 3.4vw, 5.5rem);
   }
-  .t-section {
-    font-size: clamp(2.25rem, 1.2rem + 3.9vw, 3.5rem);
-    line-height: 1.07;
-    letter-spacing: -0.005em;
+
+  /* Display: grotesca condensada pesada, entrelinha esmagada. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.86;
+    letter-spacing: 0;
+    font-kerning: normal;
   }
-  .t-feature {
-    font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
-    line-height: 1.1;
+  /* Título de seção: 46px no celular a 104px no desktop. Entrelinha 0,92 por causa dos acentos do
+     português (Ã, É, Ç) quando o título quebra em duas linhas. */
+  .h-section {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: clamp(2.9rem, 1.7rem + 4.4vw, 6.5rem);
+    line-height: 0.92;
     letter-spacing: 0;
   }
-  .t-card {
-    font-size: clamp(1.3125rem, 1.1rem + 0.8vw, 1.75rem);
-    line-height: 1.14;
-    letter-spacing: 0.007em;
-  }
-  .t-kicker {
-    font-family: var(--font-display);
-    font-size: clamp(1.0625rem, 0.9rem + 0.6vw, 1.3125rem);
-    font-weight: 600;
-    line-height: 1.19;
-    letter-spacing: 0.011em;
-  }
-  .t-lead {
-    font-family: var(--font-display);
-    font-size: clamp(1.1875rem, 1rem + 0.6vw, 1.5rem);
-    font-weight: 400;
-    line-height: 1.33;
-    letter-spacing: 0.009em;
-  }
-  .t-small {
-    font-size: 14px;
-    line-height: 1.43;
-    letter-spacing: -0.016em;
-  }
-  .t-fine {
-    font-size: 12px;
-    line-height: 1.33;
-    letter-spacing: -0.01em;
-  }
-  .t-signature {
-    color: var(--color-signature);
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1.33;
-    letter-spacing: -0.01em;
-  }
-
-  /* Pílula preenchida: só para conversão. */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    min-height: 44px;
-    padding: 0.6875rem 1.375rem;
-    border-radius: 9999px;
-    background: var(--color-accent-cta);
-    color: #fff;
-    font-size: 17px;
-    font-weight: 400;
-    line-height: 1.17;
-    letter-spacing: -0.022em;
-    white-space: nowrap;
-    transition: background-color 0.2s var(--ease-apple);
-  }
-  .btn:hover {
-    background: var(--color-accent-cta-hover);
-  }
-  .btn:active {
-    transform: scale(0.98);
-  }
-  .btn-sm {
-    min-height: 28px;
-    padding: 0.25rem 0.875rem;
-    font-size: 12px;
-    line-height: 1.33;
-    letter-spacing: -0.01em;
-  }
-  /* Pílula contornada (secundária): sem preenchimento colorido. */
-  .btn-outline {
-    background: transparent;
-    color: var(--color-ink);
-    box-shadow: inset 0 0 0 1px var(--color-steel);
-  }
-  .btn-outline:hover {
-    background: rgba(0, 0, 0, 0.04);
-  }
-
-  /* Link de texto com chevron, no estilo "Saiba mais ›". */
-  .link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.15em;
-    color: var(--color-accent);
-    border-radius: 10px;
-  }
-  .link:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
-  }
-  .link .chev {
-    width: 0.62em;
-    height: 0.62em;
-    flex: none;
-    margin-top: 0.08em;
+  /* Linha de apoio sob o título de seção. */
+  .lead {
+    font-size: clamp(1.06rem, 0.98rem + 0.35vw, 1.3rem);
+    line-height: 1.42;
+    color: var(--color-ink-soft);
   }
 
   .card {
+    border: 1px solid var(--color-line);
     border-radius: var(--radius-card);
-    overflow: hidden;
   }
-  .frame {
-    border-radius: var(--radius-card);
+  .media {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-media);
     overflow: hidden;
     isolation: isolate;
   }
 
+  /* Botões: pílula. Principal índigo da logo; secundário branco contornado. */
+  .btn,
+  .btn-line {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 3.25rem;
+    padding: 0 1.5rem 0 1.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform 0.2s var(--ease-out-soft),
+      background-color 0.2s,
+      color 0.2s;
+  }
+  .btn {
+    background: var(--color-brand);
+    border-color: var(--color-brand);
+    color: var(--color-paper);
+  }
+  .btn-line {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover,
+    .btn-line:hover {
+      transform: translateY(-2px);
+    }
+    .btn:hover {
+      background: var(--color-brand-deep);
+    }
+    .btn-line:hover {
+      background: var(--soft-lilac);
+    }
+  }
+  .btn:active,
+  .btn-line:active {
+    transform: translateY(1px) scale(0.98);
+  }
+  .btn-lg {
+    min-height: 3.75rem;
+    padding: 0 2rem 0 1.6rem;
+    font-size: 1.0625rem;
+  }
+
+  /* Adesivo: forma chapada com contorno, levemente girada. */
+  .sticker {
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--color-line);
+    color: var(--color-ink);
+    rotate: var(--r, 0deg);
+  }
+
+  /* Ícone dentro de círculo contornado (usado nos cards). */
+  .chip-icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-paper);
+    color: var(--color-brand);
+    rotate: var(--r, -5deg);
+    transition: rotate 0.4s var(--ease-pop);
+  }
+
+  /* Etiqueta pequena em pílula (rótulo de card, "assinatura"). */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 1.75rem;
+    padding: 0 0.7rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-paper);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  /* Fileira horizontal com rolagem (cards estilo Apple). Começa alinhada à coluna e vaza até a borda. */
+  .rail {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--edge);
+    padding-inline: var(--edge);
+    scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+  .rail > * {
+    scroll-snap-align: start;
+    flex: none;
+  }
+  @media (min-width: 768px) {
+    .rail {
+      gap: 1.25rem;
+    }
+  }
+  .rail-btn {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-paper);
+    transition:
+      background-color 0.2s,
+      opacity 0.2s;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .rail-btn:not(:disabled):hover {
+      background: var(--soft-lilac);
+    }
+  }
+  .rail-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
   .skip-link {
-    position: fixed;
+    position: absolute;
     left: 1rem;
     top: -4rem;
     z-index: 50;
     padding: 0.75rem 1.25rem;
-    border-radius: 9999px;
-    background: var(--color-ink);
-    color: #fff;
-    font-size: 14px;
-    transition: top 0.2s;
+    border-radius: 999px;
+    background: var(--color-brand);
+    color: var(--color-paper);
+    font-weight: 700;
   }
   .skip-link:focus {
     top: 1rem;
   }
 }
 
-/* Entrada ao rolar: sobe 24px e aparece, uma vez. Só com JS e sem "reduzir movimento"
-   (sem JS, tudo fica visível desde o início). */
+/* ---------- Entrada do hero (CSS puro: roda no primeiro paint, sem esperar JS) ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  .js [data-reveal] {
-    opacity: 0;
-    transform: translateY(24px);
-    transition:
-      opacity 0.9s var(--ease-apple),
-      transform 0.9s var(--ease-apple);
-    transition-delay: calc(var(--d, 0) * 90ms);
+  .hero-line {
+    display: block;
+    animation: rise 0.8s var(--ease-out-soft) both;
+    animation-delay: calc(var(--i, 0) * 0.07s);
   }
-  .js [data-reveal].is-in {
+  .hero-fade {
+    animation: fade-up 0.7s var(--ease-out-soft) both;
+    animation-delay: calc(0.2s + var(--i, 0) * 0.08s);
+  }
+  .hero-pop {
+    animation: pop 0.7s var(--ease-pop) both;
+    animation-delay: calc(0.35s + var(--i, 0) * 0.09s);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  to {
     opacity: 1;
     transform: none;
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    scale: 0.5;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -1,0 +1,17 @@
+---
+// Selo circular no espírito da logo: borboleta coral sobre o índigo da marca. Não é o logo oficial (o vetor
+// ainda é pendência); a borboleta é o ícone Phosphor mais próximo.
+import Icon from "./Icon.astro";
+
+interface Props {
+  class?: string;
+}
+const { class: className = "" } = Astro.props;
+---
+
+<span
+  class:list={["grid size-12 shrink-0 place-items-center rounded-full border border-brand bg-brand text-coral", className]}
+  aria-hidden="true"
+>
+  <Icon name="butterfly" class="size-[1.55rem]" />
+</span>

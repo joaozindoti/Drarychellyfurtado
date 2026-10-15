@@ -1,120 +1,135 @@
 ---
-// Hero no estilo "lançamento de produto": rótulo, título grande centralizado e, logo abaixo, o retrato de
-// estúdio como o "produto" no palco, sem card em volta (só o raio de 28px da mídia). Uma cápsula branca
-// flutua sobre a parte de baixo da foto com a chamada de agendamento.
-// Direção de arte: no celular o retrato quadrado original; do tablet para cima, o palco 2:1.
-import { getImage } from "astro:assets";
+// Hero (faixa lilás clara): display condensado enorme, apoio curto, CTA + secundário, os procedimentos mais
+// procurados em etiquetas (para ficar claro de cara o que ela faz) e o retrato de estúdio num card
+// arredondado com contorno. Poucos adesivos e giro pequeno: é Slush, só que mais sério.
+import { Picture } from "astro:assets";
+import CtaButton from "./CtaButton.astro";
 import Icon from "./Icon.astro";
-import { SITE, WHATSAPP_URL, CTA_LABEL } from "../config/site";
+import Sticker from "./Sticker.astro";
 import retrato from "../assets/img/hero-retrato.jpg";
-import palco from "../assets/img/hero-palco.jpg";
+import { SITE } from "../config/site";
 
-const fmt = async (src: ImageMetadata, widths: number[], format: "avif" | "webp" | "jpg") =>
-  (await getImage({ src, widths, format, quality: format === "avif" ? 60 : 78 })).srcSet.attribute;
-
-const W_PALCO = [960, 1280, 1708];
-const W_RETRATO = [480, 640, 854];
-const palcoAvif = await fmt(palco, W_PALCO, "avif");
-const palcoWebp = await fmt(palco, W_PALCO, "webp");
-const retratoAvif = await fmt(retrato, W_RETRATO, "avif");
-const retratoWebp = await fmt(retrato, W_RETRATO, "webp");
-const fallback = await getImage({ src: retrato, width: 854, format: "jpg", quality: 80 });
-const SIZES_PALCO = "(min-width: 1348px) 1260px, calc(100vw - 2 * var(--gutter))";
-const SIZES_RETRATO = "calc(100vw - 2rem)";
+const DESTAQUES = ["Botox", "Preenchimento labial", "Rinomodelação", "Bioestimulador", "Golden Bum"];
 ---
 
-<section id="topo" class="hero overflow-hidden pb-[var(--section-gap)] pt-[clamp(2.75rem,1.5rem+4vw,5.5rem)]" aria-labelledby="hero-titulo">
-  <div class="wrap text-center">
-    <p class="t-kicker hero-in" style="--i: 0">{SITE.profissao}</p>
-    <h1 id="hero-titulo" class="t-hero hero-in mx-auto mt-3 max-w-[16ch] md:mt-4" style="--i: 1">
-      Transforme a pele em seu melhor filtro.
-    </h1>
-    <p class="t-lead hero-in mx-auto mt-5 max-w-[38rem] text-ink md:mt-6" style="--i: 2">
-      Harmonização facial, cuidados com a pele e corpo com a {SITE.nome}, em Pedreiras&#8209;MA.
-    </p>
-    <div class="hero-in mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-4 md:mt-8" style="--i: 3">
-      <a href={WHATSAPP_URL} target="_blank" rel="noopener" class="btn" aria-label={`${CTA_LABEL} pelo WhatsApp (abre em nova aba)`}>
-        {CTA_LABEL}
-      </a>
-      <a href="#resultados" class="link text-[17px] md:text-[19px]">
-        Ver resultados <Icon name="caretRight" class="chev" />
-      </a>
-    </div>
-  </div>
+<section id="topo" class="hero relative overflow-hidden bg-lilac-wash">
+  <div
+    class="wrap grid grid-cols-1 items-center gap-y-10 pt-[5.75rem] pb-12 md:pt-28 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-14 lg:pt-32 lg:pb-16 xl:gap-x-24"
+  >
+    <!-- Texto -->
+    <div class="hero-copy relative">
+      <p class="hero-fade tag mb-5 md:mb-7" style="--i:0">
+        <Icon name="sealCheck" class="size-4 text-brand" />
+        {SITE.profissao} · {SITE.endereco.cidade}-{SITE.endereco.uf}
+      </p>
+      <h1 class="display hero-h1">
+        <span class="hero-line" style="--i:0">Realce o que</span>
+        <span class="hero-line" style="--i:1">já é seu.</span>
+      </h1>
 
-  <div class="wrap-wide hero-in mt-12 md:mt-16" style="--i: 4">
-    <div class="relative">
-      <div class="frame bg-[#4a4542]">
-        <picture>
-          <source media="(min-width: 768px)" type="image/avif" srcset={palcoAvif} sizes={SIZES_PALCO} />
-          <source media="(min-width: 768px)" type="image/webp" srcset={palcoWebp} sizes={SIZES_PALCO} />
-          <source type="image/avif" srcset={retratoAvif} sizes={SIZES_RETRATO} />
-          <source type="image/webp" srcset={retratoWebp} sizes={SIZES_RETRATO} />
-          <img
-            src={fallback.src}
-            width="854"
-            height="854"
-            alt={`${SITE.nome} sorrindo, de blazer lilás, com as mãos apoiadas sob o queixo, em estúdio de fundo cinza`}
-            class="hero-img block aspect-square w-full object-cover md:aspect-[2/1]"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </picture>
-      </div>
-
-      <!-- Cápsula flutuante: sobre a foto no desktop, logo abaixo dela no celular. -->
-      <div class="callout mx-auto mt-4 md:absolute md:inset-x-0 md:bottom-7 md:mt-0">
-        <div class="min-w-0 text-left">
-          <p class="text-[14px] font-semibold leading-[1.29] tracking-[-0.016em]">Avaliação pelo WhatsApp</p>
-          <p class="t-fine mt-0.5 text-slate">{SITE.endereco.cidade}-{SITE.endereco.uf} · {SITE.telefoneExibicao}</p>
-        </div>
-        <a href={WHATSAPP_URL} target="_blank" rel="noopener" class="btn btn-sm shrink-0" aria-label="Agendar pelo WhatsApp (abre em nova aba)">
-          Agendar
+      <p class="hero-fade mt-6 max-w-[33rem] text-[1.08rem] leading-[1.45] md:mt-8 md:text-[1.25rem]" style="--i:1">
+        Harmonização facial, labial, pele e corpo com a {SITE.nome}. Para você se olhar no espelho e se reconhecer,
+        só que no seu melhor.
+      </p>
+      <div class="hero-fade mt-6 flex flex-wrap items-center gap-3 md:mt-8" style="--i:2">
+        <CtaButton id="cta-hero" />
+        <a href="#antes-e-depois" class="btn-line">
+          Ver antes e depois
+          <Icon name="arrowDown" class="size-[1.1rem]" />
         </a>
       </div>
+
+      <ul class="hero-fade mt-7 flex flex-wrap gap-2 md:mt-9" style="--i:3" aria-label="Procedimentos mais procurados">
+        {DESTAQUES.map((d) => <li class="tag bg-paper/70">{d}</li>)}
+      </ul>
+    </div>
+
+    <!-- Retrato num card arredondado com contorno -->
+    <div class="hero-fade relative mx-auto w-full max-w-[26rem] lg:mx-0 lg:w-[clamp(19rem,26vw,25rem)]" style="--i:2">
+      <div class="media hero-media relative bg-[#4a4542]">
+        <Picture
+          src={retrato}
+          formats={["avif", "webp"]}
+          widths={[360, 480, 683]}
+          sizes="(min-width: 1024px) 25rem, min(92vw, 26rem)"
+          alt={`${SITE.nome} sorrindo, de blazer lilás, com as mãos apoiadas sob o queixo, em estúdio de fundo cinza`}
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+        <!-- Etiqueta presa na foto -->
+        <span class="photo-label absolute bottom-4 left-4 z-[1] md:bottom-5 md:left-5">
+          <span class="grid size-8 place-items-center rounded-full bg-brand text-coral"><Icon name="butterfly" class="size-[1.1rem]" /></span>
+          <span class="leading-tight">
+            <span class="block text-[0.95rem] font-bold">{SITE.nome}</span>
+            <span class="block text-[0.8rem] text-ink-soft">{SITE.profissao}</span>
+          </span>
+        </span>
+      </div>
+
+      <Sticker icon="butterfly" color="brand" shape="circle" size={4.4} rotate={-8} class="hero-pop st-a absolute z-[2]" style="--i:0" />
+      <Sticker icon="sparkle" color="champagne" size={3.5} rotate={7} class="hero-pop st-b absolute z-[2]" style="--i:1" />
+      <Sticker icon="heart" color="peach" shape="circle" size={3.1} rotate={-6} class="hero-pop st-c absolute z-[2]" style="--i:2" />
     </div>
   </div>
 </section>
 
 <style>
-  .callout {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.25rem;
-    width: fit-content;
-    max-width: calc(100% - 1rem);
-    padding: 0.75rem 0.75rem 0.75rem 1.5rem;
-    border-radius: var(--radius-card);
-    background: #fff;
-    box-shadow: 0 0 0 1px var(--color-control);
+  /* Display enorme: a fonte acompanha a largura da coluna (container query), então nunca quebra palavra.
+     "REALCE O QUE" mede ~4,2em nesta fonte. */
+  .hero-copy {
+    container-type: inline-size;
   }
-  @media (min-width: 768px) {
-    .callout {
-      box-shadow: none;
-    }
+  .hero-h1 {
+    font-size: min(21cqi, 9.4rem);
+    /* 0,98 e não 0,84: os acentos do "JÁ É" encostavam na linha de cima. */
+    line-height: 0.98;
+    margin-left: -0.03em;
   }
-  /* Celular: o rosto fica no terço de cima do quadrado; nada a ajustar. Desktop: palco já composto. */
 
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-in {
-      animation: hero-in 1.1s var(--ease-apple) both;
-      animation-delay: calc(var(--i) * 110ms + 80ms);
-    }
-    .hero-img {
-      animation: hero-zoom 1.8s var(--ease-out-soft) both;
-      animation-delay: 0.45s;
-    }
+  .hero-media {
+    aspect-ratio: 4 / 5;
   }
-  @keyframes hero-in {
-    from {
-      opacity: 0;
-      transform: translateY(18px);
-    }
+
+  .photo-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 1rem 0.4rem 0.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-paper);
   }
-  @keyframes hero-zoom {
-    from {
-      transform: scale(1.04);
+
+  /* Adesivos em volta do retrato (posições à mão, nunca em grade). */
+  /* No celular os adesivos ficam dentro da margem lateral (não encostam na borda da tela). */
+  .hero :global(.st-a) {
+    right: -0.35rem;
+    top: -1.4rem;
+  }
+  .hero :global(.st-b) {
+    left: -0.35rem;
+    top: 34%;
+  }
+  .hero :global(.st-c) {
+    right: -0.35rem;
+    bottom: 22%;
+  }
+  @media (min-width: 1024px) {
+    .hero :global(.st-a) {
+      right: auto;
+      left: -2.2rem;
+      top: 2.2rem;
+    }
+    .hero :global(.st-b) {
+      left: auto;
+      right: -1.5rem;
+      top: -1.2rem;
+    }
+    .hero :global(.st-c) {
+      right: -1.3rem;
+      bottom: 28%;
     }
   }
 </style>

@@ -34,39 +34,9 @@ const fadeMask = (w, h, fade) =>
       `</linearGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/></svg>`
   );
 
-// 1. Hero. O retrato de estúdio (854x854, fundo cinza quente com vinheta) é o "produto" no palco branco.
-// Celular: o quadrado original. Desktop: palco 2:1, com o fundo do estúdio continuado para os lados
-// (a borda do estúdio esticada) e o retrato fundido nas bordas.
+// 1. Hero: retrato de estúdio (854x854, fundo cinza quente). Recorte 4:5 centrado nela, para o card do hero.
 const RETRATO = src("estudio-blazer-lilas.jpg");
-await out("hero-retrato.jpg", sharp(RETRATO));
-{
-  const H = 854;
-  const W = H * 2;
-  const fade = 150;
-  const retrato = await sharp(RETRATO)
-    .ensureAlpha()
-    .composite([{ input: fadeMask(H, H, fade), blend: "dest-in" }])
-    .png()
-    .toBuffer();
-  // Fundo: a coluna de borda do estúdio (média de 30 px, só até a altura onde ainda é parede) esticada para
-  // cada lado. Assim a cor de cada altura bate com a borda do retrato, sem puxar a cor da roupa.
-  const PAREDE = 560;
-  // (sharp aplica um só resize por pipeline, por isso as etapas passam por buffer)
-  const lado = async (left) => {
-    const coluna = await sharp(RETRATO).extract({ left, top: 0, width: 30, height: PAREDE }).resize(1, PAREDE, { fit: "fill" }).toBuffer();
-    const inteira = await sharp(coluna).extend({ bottom: H - PAREDE, extendWith: "copy" }).toBuffer();
-    return sharp(inteira).resize((W - H) / 2 + fade, H, { fit: "fill" }).blur(6).toBuffer();
-  };
-  const [esq, dir] = await Promise.all([lado(0), lado(H - 30)]);
-  const fundo = await sharp({ create: { width: W, height: H, channels: 3, background: "#4a4542" } })
-    .composite([{ input: esq, left: 0, top: 0 }, { input: dir, left: W - ((W - H) / 2 + fade), top: 0 }])
-    .png()
-    .toBuffer();
-  await out(
-    "hero-palco.jpg",
-    sharp(fundo).composite([{ input: retrato, left: (W - H) / 2, top: 0 }])
-  );
-}
+await out("hero-retrato.jpg", sharp(RETRATO).extract({ left: 96, top: 0, width: 683, height: 854 }));
 
 // 2. Sobre: foto de divulgação de blusa branca (1080x1254). Só o retrato, sem a lista de procedimentos.
 await out("sobre-retrato.jpg", sharp(src("flyer-procedimentos.webp")).extract({ left: 620, top: 70, width: 460, height: 690 }));

@@ -1,7 +1,7 @@
 ---
-// Bloco editorial "O que esperar depois do preenchimento labial", a partir do carrossel da própria Dra.
-// Texto à esquerda, foto entrando pela direita; embaixo, as fases em cards brancos com o desenho de traço
-// dos lábios (como nas artes dela), cada vez menos inchados.
+// Preenchimento labial, dia a dia: a partir do carrossel da própria Dra. ("O que esperar depois do
+// preenchimento labial?"). Foto dela aplicando num card + as fases em cards de tom claro com o desenho de
+// traço dos lábios, cada vez menos inchados (como nas artes dela).
 // A fase "Dias 1 e 2" não está nas artes recebidas (falta o slide 1); o texto é o que as outras fases deixam
 // implícito. Confirmar com a Dra.
 import { Picture } from "astro:assets";
@@ -11,10 +11,10 @@ import { whatsappProcedimento } from "../config/site";
 
 // Altura do lábio de cima e de baixo (px no viewBox 240x150), do mais inchado ao resultado final.
 const FASES = [
-  { quando: "Dias 1 e 2", titulo: "Inchaço no auge.", texto: "Lábios mais inchados e, às vezes, pequenos roxos. Faz parte.", cima: 54, baixo: 68 },
-  { quando: "Dias 3 a 7", titulo: "Desinchando.", texto: "O inchaço já diminui bastante.", cima: 44, baixo: 57 },
-  { quando: "Dias 9 e 10", titulo: "A fase do amor.", texto: "Você se apaixona pelos novos lábios. Tem gente que até sente falta de mais inchaço.", cima: 36, baixo: 48 },
-  { quando: "A partir de 14 dias", titulo: "O resultado real.", texto: "Inchaço e roxos já passaram. Agora dá para avaliar o efeito do preenchimento.", cima: 31, baixo: 42 },
+  { quando: "Dias 1 e 2", titulo: "Inchou? É normal.", texto: "Lábios mais inchados e, às vezes, pequenos roxos. Faz parte do processo.", cima: 54, baixo: 68, cor: "coral" },
+  { quando: "Dias 3 a 7", titulo: "Desinchando.", texto: "O inchaço já diminui bastante e o formato começa a aparecer.", cima: 44, baixo: 57, cor: "peach" },
+  { quando: "Dias 9 e 10", titulo: "Fase do amor.", texto: "Você se apaixona pelos novos lábios. Tem gente que até sente falta de mais inchaço.", cima: 36, baixo: 48, cor: "lilac" },
+  { quando: "A partir de 14 dias", titulo: "O resultado real.", texto: "Inchaço e roxos já passaram. Agora dá para avaliar o efeito do preenchimento.", cima: 31, baixo: 42, cor: "sage" },
 ];
 
 const Y = 76;
@@ -25,58 +25,93 @@ const labios = (a: number, b: number) => ({
 });
 ---
 
-<section id="labial" class="band bg-mist" aria-labelledby="labial-titulo">
-  <div class="wrap grid items-center gap-10 md:grid-cols-[1.15fr_1fr] md:gap-16">
+<section id="labial" class="band bg-blush-wash" aria-labelledby="labial-titulo">
+  <div class="wrap flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
     <div>
-      <p class="t-kicker" data-reveal>Preenchimento labial</p>
-      <h2 id="labial-titulo" class="t-section mt-3" data-reveal>O que esperar depois.</h2>
-      <p class="mt-5 max-w-[30rem] md:mt-6" data-reveal>
-        O resultado aparece em etapas. Saber o que é normal em cada fase deixa a recuperação bem mais
-        tranquila.
+      <h2 id="labial-titulo" class="h-section max-w-[13ch] md:max-w-none">Preenchimento labial, dia a dia</h2>
+      <p class="lead mt-4 max-w-[34rem] md:mt-5">
+        O resultado aparece em etapas. Saber o que é normal em cada fase deixa a recuperação bem mais tranquila.
       </p>
-      <a
-        href={whatsappProcedimento("preenchimento labial")}
-        target="_blank"
-        rel="noopener"
-        class="link mt-5 text-[17px]"
-        data-reveal
-      >
-        Quero agendar meu labial <Icon name="caretRight" class="chev" />
-      </a>
     </div>
-    <div class="frame mx-auto w-full max-w-[22rem] md:ml-auto md:mr-0" data-reveal>
+    <a href={whatsappProcedimento("preenchimento labial")} target="_blank" rel="noopener" class="btn-line">
+      Quero fazer meu labial
+      <Icon name="arrowUpRight" class="size-[1.1rem]" />
+    </a>
+  </div>
+
+  <div class="fases wrap mt-8 grid gap-3.5 md:mt-10 md:gap-4">
+    <div class="f-foto media relative bg-[#f2b8b0]">
       <Picture
         src={foto}
         formats={["avif", "webp"]}
         widths={[380]}
-        sizes="22rem"
+        sizes="(min-width: 1280px) 17rem, (min-width: 640px) 45vw, 92vw"
         alt="Dra. Rychelly de jaleco branco e luvas, aplicando o preenchimento nos lábios com uma seringa"
         loading="lazy"
         decoding="async"
-        class="block aspect-[2/3] w-full object-cover"
+        class="absolute inset-0 h-full w-full object-cover object-[50%_30%]"
       />
     </div>
+    <ol class="contents">
+      {
+        FASES.map((f, i) => {
+          const p = labios(f.cima, f.baixo);
+          return (
+            <li class="card flex flex-col p-5 md:p-6" style={`background:var(--soft-${f.cor})`}>
+              <span class="flex items-center justify-between">
+                <span class="tag">{f.quando}</span>
+                <span class="font-display text-[1.6rem] leading-none text-brand/50" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </span>
+              <svg viewBox="0 0 240 150" class="mx-auto mt-5 h-auto w-[72%] max-w-[12rem] text-brand" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d={p.cima} />
+                  <path d={p.baixo} />
+                  <path d={p.boca} />
+                </g>
+              </svg>
+              <h3 class="fase-titulo mt-5 font-display uppercase">{f.titulo}</h3>
+              <p class="mt-2 text-[0.95rem] leading-snug text-ink-soft">{f.texto}</p>
+            </li>
+          );
+        })
+      }
+    </ol>
   </div>
-
-  <ol class="wrap-wide mt-14 grid gap-4 sm:grid-cols-2 md:mt-20 lg:grid-cols-4" aria-label="Fases da recuperação">
-    {
-      FASES.map((f, i) => {
-        const p = labios(f.cima, f.baixo);
-        return (
-          <li class="card flex flex-col bg-white px-7 pb-8 pt-9" data-reveal style={`--d: ${i}`}>
-            <svg viewBox="0 0 240 150" class="mx-auto h-auto w-[78%] max-w-[13rem] text-ink" aria-hidden="true">
-              <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d={p.cima} />
-                <path d={p.baixo} />
-                <path d={p.boca} />
-              </g>
-            </svg>
-            <p class="t-small mt-8 font-semibold text-slate">{f.quando}</p>
-            <h3 class="t-card mt-1.5">{f.titulo}</h3>
-            <p class="t-small mt-2 text-slate">{f.texto}</p>
-          </li>
-        );
-      })
-    }
-  </ol>
 </section>
+
+<style>
+  .fases {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .f-foto {
+    aspect-ratio: 1 / 1;
+  }
+  @media (min-width: 640px) {
+    .fases {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .f-foto {
+      grid-row: span 2;
+      aspect-ratio: auto;
+    }
+  }
+  @media (min-width: 1024px) {
+    .fases {
+      grid-template-columns: 1.1fr 1fr 1fr;
+    }
+  }
+  @media (min-width: 1280px) {
+    .fases {
+      grid-template-columns: 0.95fr 1fr 1fr 1fr 1fr;
+    }
+    .f-foto {
+      grid-row: auto;
+    }
+  }
+  .fase-titulo {
+    font-size: clamp(1.75rem, 1.5rem + 0.7vw, 2.15rem);
+    line-height: 0.9;
+  }
+</style>
