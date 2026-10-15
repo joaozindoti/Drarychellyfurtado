@@ -38,11 +38,27 @@ const fadeMask = (w, h, fade) =>
 const RETRATO = src("estudio-blazer-lilas.jpg");
 await out("hero-retrato.jpg", sharp(RETRATO).extract({ left: 96, top: 0, width: 683, height: 854 }));
 
-// 2. Sobre: foto de divulgação de blusa branca (1080x1254). Só o retrato, sem a lista de procedimentos.
-await out("sobre-retrato.jpg", sharp(src("flyer-procedimentos.webp")).extract({ left: 620, top: 70, width: 460, height: 690 }));
+// 2. Sobre: retrato de estúdio em pé, blazer lilás (1440x1440, enviado em 15/10). Recorte 2:3 centrado nela.
+await out("sobre-retrato.jpg", sharp(src("estudio-blazer-lilas-em-pe.jpg")).extract({ left: 280, top: 0, width: 960, height: 1440 }).resize(800, 1200));
 
-// 3. Preenchimento labial: foto de divulgação com a seringa (1080x1080), sem o texto da arte.
-await out("labial-aplicacao.jpg", sharp(src("labial-capa.webp")).extract({ left: 700, top: 150, width: 380, height: 570 }));
+// 3. Preenchimento labial: a arte inteira dela (1080x1080), só sem o "Arraste p/ o lado e confira" (que é do
+// carrossel do Instagram e não faz sentido no site). O trecho é refeito coluna a coluna, interpolando a cor do
+// fundo rosa entre a linha logo acima e a logo abaixo do texto (o fundo ali é um degradê liso).
+{
+  const { data, info } = await sharp(src("labial-capa.webp")).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const { width: W, channels: C } = info;
+  const [x0, x1, y0, y1] = [88, 342, 496, 598];
+  const px = (x, y) => (y * W + x) * C;
+  for (let x = x0; x <= x1; x++) {
+    const a = px(x, y0);
+    const b = px(x, y1);
+    for (let y = y0 + 1; y < y1; y++) {
+      const t = (y - y0) / (y1 - y0);
+      for (let c = 0; c < C; c++) data[px(x, y) + c] = Math.round(data[a + c] * (1 - t) + data[b + c] * t);
+    }
+  }
+  await out("labial-aplicacao.jpg", sharp(data, { raw: info }));
+}
 
 // 4. Antes/depois. Cada recorte é quadrado; nas fotos empilhadas (metade de cima = antes, de baixo = depois)
 // o ponto de referência fica na mesma posição relativa nas duas metades, para a troca Antes/Depois não "pular".

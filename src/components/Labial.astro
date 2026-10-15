@@ -1,7 +1,7 @@
 ---
 // Preenchimento labial, dia a dia: a partir do carrossel da própria Dra. ("O que esperar depois do
-// preenchimento labial?"). Foto dela aplicando num card + as fases em cards de tom claro com o desenho de
-// traço dos lábios, cada vez menos inchados (como nas artes dela).
+// preenchimento labial?"). A arte dela aparece inteira (quadrada, sem o "arraste para o lado") ao lado do
+// título; embaixo, as fases em cards de tom claro com o desenho de traço dos lábios, cada vez menos inchados.
 // A fase "Dias 1 e 2" não está nas artes recebidas (falta o slide 1); o texto é o que as outras fases deixam
 // implícito. Confirmar com a Dra.
 import { Picture } from "astro:assets";
@@ -11,10 +11,10 @@ import { whatsappProcedimento } from "../config/site";
 
 // Altura do lábio de cima e de baixo (px no viewBox 240x150), do mais inchado ao resultado final.
 const FASES = [
-  { quando: "Dias 1 e 2", titulo: "Inchou? É normal.", texto: "Lábios mais inchados e, às vezes, pequenos roxos. Faz parte do processo.", cima: 54, baixo: 68, cor: "coral" },
-  { quando: "Dias 3 a 7", titulo: "Desinchando.", texto: "O inchaço já diminui bastante e o formato começa a aparecer.", cima: 44, baixo: 57, cor: "peach" },
-  { quando: "Dias 9 e 10", titulo: "Fase do amor.", texto: "Você se apaixona pelos novos lábios. Tem gente que até sente falta de mais inchaço.", cima: 36, baixo: 48, cor: "lilac" },
-  { quando: "A partir de 14 dias", titulo: "O resultado real.", texto: "Inchaço e roxos já passaram. Agora dá para avaliar o efeito do preenchimento.", cima: 31, baixo: 42, cor: "sage" },
+  { quando: "Dias 1 e 2", titulo: "Inchou? É normal.", texto: "Inchaço e, às vezes, pequenos roxos.", cima: 54, baixo: 68, cor: "coral" },
+  { quando: "Dias 3 a 7", titulo: "Desinchando.", texto: "O inchaço já diminui bastante.", cima: 44, baixo: 57, cor: "peach" },
+  { quando: "Dias 9 e 10", titulo: "Fase do amor.", texto: "Tem gente que sente falta de mais inchaço.", cima: 36, baixo: 48, cor: "lilac" },
+  { quando: "14 dias", titulo: "Resultado real.", texto: "Agora dá para avaliar o efeito final.", cima: 31, baixo: 42, cor: "sage" },
 ];
 
 const Y = 76;
@@ -26,119 +26,89 @@ const labios = (a: number, b: number) => ({
 ---
 
 <section id="labial" class="band bg-blush-wash" aria-labelledby="labial-titulo">
-  <div class="wrap flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
+  <div class="wrap grid items-center gap-6 md:gap-8 lg:grid-cols-[minmax(0,1fr)_clamp(22rem,32vw,28rem)] lg:gap-14">
     <div>
-      <h2 id="labial-titulo" class="h-section max-w-[13ch] md:max-w-none">Preenchimento labial, dia a dia</h2>
-      <p class="lead mt-4 max-w-[34rem] md:mt-5">
-        O resultado aparece em etapas. Saber o que é normal em cada fase deixa a recuperação bem mais tranquila.
-      </p>
+      <h2 id="labial-titulo" class="h-section max-w-[13ch] lg:max-w-none">Preenchimento labial, dia a dia</h2>
+      <p class="lead mt-4 max-w-[28rem] md:mt-5">Inchou? É normal. Veja o que esperar em cada fase.</p>
+      <a href={whatsappProcedimento("preenchimento labial")} target="_blank" rel="noopener" class="btn-line mt-6">
+        Quero fazer meu labial
+        <Icon name="arrowUpRight" class="size-[1.1rem]" />
+      </a>
     </div>
-    <a href={whatsappProcedimento("preenchimento labial")} target="_blank" rel="noopener" class="btn-line">
-      Quero fazer meu labial
-      <Icon name="arrowUpRight" class="size-[1.1rem]" />
-    </a>
-  </div>
 
-  <div class="fases wrap mt-8 grid gap-3.5 md:mt-10 md:gap-4">
-    <div class="f-foto media relative bg-[#f2b8b0]">
+    <!-- A arte inteira dela (quadrada) -->
+    <div class="media bg-[#f6b9b2]">
       <Picture
         src={foto}
         formats={["avif", "webp"]}
-        widths={[380]}
-        sizes="(min-width: 1280px) 17rem, (min-width: 640px) 45vw, 92vw"
-        alt="Dra. Rychelly de jaleco branco e luvas, aplicando o preenchimento nos lábios com uma seringa"
+        widths={[400, 600, 800, 1080]}
+        sizes="(min-width: 1024px) 28rem, calc(100vw - 2rem)"
+        alt="Arte da Dra. Rychelly: “O que esperar depois do preenchimento labial?”. Ela, de jaleco branco e luvas, aplica o preenchimento nos lábios com uma seringa"
         loading="lazy"
         decoding="async"
-        class="absolute inset-0 h-full w-full object-cover object-[50%_30%]"
+        class="block aspect-square w-full"
       />
     </div>
-    <ol class="contents">
-      {
-        FASES.map((f, i) => {
-          const p = labios(f.cima, f.baixo);
-          return (
-            <li class="card flex flex-col p-5 md:p-6" style={`background:var(--soft-${f.cor})`}>
-              <span class="flex items-center justify-between">
-                <span class="tag">{f.quando}</span>
-                <span class="fase-num font-display text-[1.6rem] leading-none text-brand/50" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-              </span>
-              <svg viewBox="0 0 240 150" class="mx-auto mt-5 h-auto w-[72%] max-w-[12rem] text-brand" aria-hidden="true">
-                <g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
-                  <path d={p.cima} />
-                  <path d={p.baixo} />
-                  <path d={p.boca} />
-                </g>
-              </svg>
-              <h3 class="fase-titulo mt-5 font-display uppercase">{f.titulo}</h3>
-              <p class="mt-2 text-[0.95rem] leading-snug text-ink-soft">{f.texto}</p>
-            </li>
-          );
-        })
-      }
-    </ol>
   </div>
+
+  <ol class="fases wrap mt-6 grid grid-cols-2 gap-3 md:mt-10 md:gap-4 lg:grid-cols-4" aria-label="Fases da recuperação">
+    {
+      FASES.map((f, i) => {
+        const p = labios(f.cima, f.baixo);
+        return (
+          <li class="fase card flex flex-col" style={`background:var(--soft-${f.cor})`}>
+            <span class="flex items-center justify-between gap-2">
+              <span class="tag">{f.quando}</span>
+              <span class="fase-num font-display text-[1.6rem] leading-none text-brand/50" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            </span>
+            <svg viewBox="0 0 240 150" class="fase-labios mx-auto h-auto text-brand" aria-hidden="true">
+              <g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d={p.cima} />
+                <path d={p.baixo} />
+                <path d={p.boca} />
+              </g>
+            </svg>
+            <h3 class="fase-titulo font-display uppercase">{f.titulo}</h3>
+            <p class="fase-texto mt-1.5 text-ink-soft">{f.texto}</p>
+          </li>
+        );
+      })
+    }
+  </ol>
 </section>
 
 <style>
-  /* Celular: foto larga em cima e as 4 fases em 2 colunas (página mais curta). */
-  .fases {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .fase {
+    padding: 1rem;
   }
-  .f-foto {
-    grid-column: 1 / -1;
-    aspect-ratio: 16 / 10;
-  }
-  @media (max-width: 639.98px) {
-    /* Foto larga: sobe o enquadramento para os olhos não ficarem cortados. */
-    .f-foto :global(img) {
-      object-position: 50% 14%;
-    }
-    .fases > ol > li > p {
-      font-size: 0.88rem;
-    }
-    .fases > ol > li {
-      padding: 1rem;
-    }
-    .fases svg {
-      width: 88%;
-      margin-top: 0.9rem;
-    }
-    .fases .fase-titulo {
-      margin-top: 0.9rem;
-      font-size: 1.45rem;
-    }
-    .fases .fase-num {
-      display: none;
-    }
-    .fases .tag {
-      font-size: 0.72rem;
-      padding: 0 0.55rem;
-    }
-  }
-  @media (min-width: 640px) {
-    .f-foto {
-      grid-column: auto;
-      grid-row: span 2;
-      aspect-ratio: auto;
-    }
-  }
-  @media (min-width: 1024px) {
-    .fases {
-      grid-template-columns: 1.1fr 1fr 1fr;
-    }
-  }
-  @media (min-width: 1280px) {
-    .fases {
-      grid-template-columns: 0.95fr 1fr 1fr 1fr 1fr;
-    }
-    .f-foto {
-      grid-row: auto;
-    }
+  .fase-labios {
+    width: 86%;
+    max-width: 11rem;
+    margin-top: 0.9rem;
   }
   .fase-titulo {
-    font-size: clamp(1.75rem, 1.5rem + 0.7vw, 2.15rem);
+    margin-top: 0.9rem;
+    font-size: clamp(1.4rem, 1.2rem + 0.7vw, 2rem);
     line-height: 0.9;
+  }
+  .fase-texto {
+    font-size: 0.88rem;
+    line-height: 1.35;
+  }
+  .fase-num {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .fase {
+      padding: 1.5rem;
+    }
+    .fase-num {
+      display: block;
+    }
+    .fase-texto {
+      font-size: 0.95rem;
+    }
   }
 </style>

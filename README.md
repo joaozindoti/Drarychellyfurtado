@@ -50,7 +50,7 @@ O Astro gera AVIF/WebP em vários tamanhos no build.
   o mapa e o "Como chegar" usam o pino do perfil. Confirmar com a Dra. e acertar um dos dois.
 - Confirmar com a Dra.: o produto usado no caso "Queixo e mandíbula" e o texto da fase "Dias 1 e 2" do
   preenchimento labial (o slide 1 do carrossel não veio; o texto é o que os outros slides deixam implícito).
-- Fotos em resolução maior: o retrato de estúdio (854px), as fotos de divulgação e os casos de sorriso gengival e
+- Fotos em resolução maior: o retrato do hero (854px), a arte do labial (1080px) e os casos de sorriso gengival e
   Golden Bum vieram de artes do Instagram e ficam um pouco moles em telas grandes de alta densidade.
 - Logo vetorial (SVG). Hoje o selo usa o ícone de borboleta mais próximo e o favicon é o PNG de 150px do perfil.
 - Vídeo: não havia. Se aparecer, o card do hero comporta um vídeo no lugar do retrato (como na LP da Dra. Carla).
