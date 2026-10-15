@@ -60,7 +60,7 @@ const labios = (a: number, b: number) => ({
             <li class="card flex flex-col p-5 md:p-6" style={`background:var(--soft-${f.cor})`}>
               <span class="flex items-center justify-between">
                 <span class="tag">{f.quando}</span>
-                <span class="font-display text-[1.6rem] leading-none text-brand/50" aria-hidden="true">
+                <span class="fase-num font-display text-[1.6rem] leading-none text-brand/50" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </span>
@@ -82,17 +82,44 @@ const labios = (a: number, b: number) => ({
 </section>
 
 <style>
+  /* Celular: foto larga em cima e as 4 fases em 2 colunas (página mais curta). */
   .fases {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .f-foto {
-    aspect-ratio: 1 / 1;
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 10;
+  }
+  @media (max-width: 639.98px) {
+    /* Foto larga: sobe o enquadramento para os olhos não ficarem cortados. */
+    .f-foto :global(img) {
+      object-position: 50% 14%;
+    }
+    .fases > ol > li > p {
+      font-size: 0.88rem;
+    }
+    .fases > ol > li {
+      padding: 1rem;
+    }
+    .fases svg {
+      width: 88%;
+      margin-top: 0.9rem;
+    }
+    .fases .fase-titulo {
+      margin-top: 0.9rem;
+      font-size: 1.45rem;
+    }
+    .fases .fase-num {
+      display: none;
+    }
+    .fases .tag {
+      font-size: 0.72rem;
+      padding: 0 0.55rem;
+    }
   }
   @media (min-width: 640px) {
-    .fases {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
     .f-foto {
+      grid-column: auto;
       grid-row: span 2;
       aspect-ratio: auto;
     }

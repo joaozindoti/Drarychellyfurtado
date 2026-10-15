@@ -147,9 +147,9 @@
     padding-inline: var(--gutter);
   }
 
-  /* Faixas de seção: compactas (48 a 88px), sem divisória nem sombra. */
+  /* Faixas de seção: compactas (36 a 60px), sem divisória nem sombra. */
   .band {
-    padding-block: clamp(3rem, 2.2rem + 3.4vw, 5.5rem);
+    padding-block: clamp(2.25rem, 1.75rem + 2vw, 3.75rem);
   }
 
   /* Display: grotesca condensada pesada, entrelinha esmagada. */
@@ -161,13 +161,13 @@
     letter-spacing: 0;
     font-kerning: normal;
   }
-  /* Título de seção: 46px no celular a 104px no desktop. Entrelinha 0,92 por causa dos acentos do
+  /* Título de seção: 42px no celular a 90px no desktop. Entrelinha 0,92 por causa dos acentos do
      português (Ã, É, Ç) quando o título quebra em duas linhas. */
   .h-section {
     font-family: var(--font-display);
     font-weight: 800;
     text-transform: uppercase;
-    font-size: clamp(2.9rem, 1.7rem + 4.4vw, 6.5rem);
+    font-size: clamp(2.6rem, 1.6rem + 3.8vw, 5.6rem);
     line-height: 0.92;
     letter-spacing: 0;
   }
